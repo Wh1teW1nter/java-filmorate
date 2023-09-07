@@ -1,19 +1,14 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -44,11 +39,11 @@ public class UserController {
         }
         if (validateUser(user)) {
             Long checkingUserId = user.getId();
-                if (checkingUserId == null) {
-                    log.debug("Передан пользователь без ID. Переданные данные: {}", user);
-                } else if (user.equals(users.get(checkingUserId))) {
-                    log.debug("Существует идентичный пользователь. Переданные данные: {}", user);
-                }
+            if (checkingUserId == null) {
+                log.debug("Передан пользователь без ID. Переданные данные: {}", user);
+            } else if (user.equals(users.get(checkingUserId))) {
+                log.debug("Существует идентичный пользователь. Переданные данные: {}", user);
+            }
             log.debug("Обновлен пользователь. Переданные данные: {}", user);
             users.put(checkingUserId, user);
             return user;
@@ -75,18 +70,18 @@ public class UserController {
         String login = user.getLogin();
         LocalDate date = user.getBirthday();
         boolean isOK = true;
-            if (email == null || email.indexOf("@")==-1) {
-                log.debug("Некорректное значение поля email. Переданные данные: {}", email);
-                isOK = false;
-            }
-            if (login == null || login.indexOf(" ")!=-1) {
-                log.debug("Некорректное значение поля login. Переданные данные: {}", login);
-                isOK = false;
-            }
-            if (date.isAfter(LocalDate.now())) {
-                log.debug("Поле birthday не может быть старше нынешней даты. Переданные данные: {}", date);
-                isOK = false;
-            }
+        if (email == null || email.indexOf("@") == -1) {
+            log.debug("Некорректное значение поля email. Переданные данные: {}", email);
+            isOK = false;
+        }
+        if (login == null || login.indexOf(" ") != -1) {
+            log.debug("Некорректное значение поля login. Переданные данные: {}", login);
+            isOK = false;
+        }
+        if (date.isAfter(LocalDate.now())) {
+            log.debug("Поле birthday не может быть старше нынешней даты. Переданные данные: {}", date);
+            isOK = false;
+        }
         return isOK;
     }
 
