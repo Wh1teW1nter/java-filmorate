@@ -13,8 +13,8 @@ import java.util.Map;
 @RestController
 @Slf4j
 public class FilmController {
-    Map<Long, Film> films = new HashMap<Long, Film>();
-    Long iterator = 0L;
+    private final Map<Long, Film> films = new HashMap<Long, Film>();
+    private Long iterator = 0L;
 
     @PostMapping(value = "/films")
     public Film createFilm(@RequestBody Film film) throws ValidationException {
@@ -55,13 +55,13 @@ public class FilmController {
     }
 
 
-    public Film addNewFilm(Film film) {
+    private Film addNewFilm(Film film) {
         film.setId(++iterator);
         films.put(iterator, film);
         return film;
     }
 
-    public boolean validateFilm(Film film) {
+    private boolean validateFilm(Film film) {
         String name = film.getName();
         String description = film.getDescription();
         LocalDate date = film.getReleaseDate();

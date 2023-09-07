@@ -15,8 +15,8 @@ import java.util.Map;
 @Slf4j
 public class UserController {
 
-    Map<Long, User> users = new HashMap<Long, User>();
-    Long iterator = 0L;
+    private final Map<Long, User> users = new HashMap<Long, User>();
+    private Long iterator = 0L;
 
     @PostMapping(value = "/users")
     public User createUser(@RequestBody User user) throws ValidationException {
@@ -58,13 +58,13 @@ public class UserController {
     }
 
 
-    public User addNewUser(User user) {
+    private User addNewUser(User user) {
         user.setId(++iterator);
         users.put(iterator, user);
         return user;
     }
 
-    public boolean validateUser(User user) {
+    private boolean validateUser(User user) {
         System.out.println("Start validation");
         String email = user.getEmail();
         String login = user.getLogin();
