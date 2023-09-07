@@ -51,7 +51,7 @@ public class FilmController {
     @GetMapping("/films")
     public List<Film> getAllFilms() {
         log.debug("Все пользователи на момент вызова метода: GET /films {}", films);
-        return films.values().stream().toList();
+        return List.copyOf(films.values());
     }
 
 

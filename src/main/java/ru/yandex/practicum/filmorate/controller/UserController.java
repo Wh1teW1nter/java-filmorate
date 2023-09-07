@@ -54,7 +54,7 @@ public class UserController {
     @GetMapping("/users")
     public List<User> getAllUsers() {
         log.debug("Все пользователи на момент вызова метода: GET /users {}", users);
-        return users.values().stream().toList();
+        return List.copyOf(users.values());
     }
 
 
