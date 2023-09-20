@@ -23,8 +23,8 @@ public class FilmService {
         this.inMemoryUserStorage = inMemoryUserStorage;
     }
 
-    public Film getFilm(String name) {
-        return null;
+    public Film getFilmById(Integer id) throws ValidationException {
+        return inMemoryFilmStorage.getFilmById(id);
     }
 
     public Film createFilm(Film film) throws ValidationException {
@@ -44,7 +44,7 @@ public class FilmService {
     public Film addLikeFilm(int userId, int filmId) throws ValidationException {
         Film film = inMemoryFilmStorage.getFilmById(filmId);
         User user = inMemoryUserStorage.getUserById(userId);
-        film.getLikes().add(user);
+        film.getLikes().add(user.getId());
         return film;
     }
 

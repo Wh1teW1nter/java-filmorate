@@ -56,4 +56,9 @@ public class FilmController {
         return filmService.getFilmsByRate(count);
 
     }
+
+    @GetMapping("/films/{id}")
+    public Film getFilmById(@PathVariable Integer id) throws ValidationException {
+        return filmService.getFilmById(id);
+    }
 }

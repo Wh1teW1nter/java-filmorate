@@ -13,9 +13,10 @@ public class Film {
     private String description;
     private LocalDate releaseDate;
     private int duration;
-    private Set<User> likes = new HashSet<User>();
+    private int rate;
+    private Set<Long> likes = new HashSet<Long>();
 
-    public Set<User> getLikes() {
+    public Set<Long> getLikes() {
         return likes;
     }
 

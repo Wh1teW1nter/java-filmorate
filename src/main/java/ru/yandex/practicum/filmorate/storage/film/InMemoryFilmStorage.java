@@ -81,15 +81,17 @@ public class InMemoryFilmStorage {
         return List.copyOf(films.values());
     }
 
-    public Film getFilmById(int id) throws ValidationException {
+    public Film getFilmById(Integer id) throws ValidationException {
         if (id <= 0) {
             log.debug("Id не может быть меньше или равен нулю. Значение id: " + id);
-            throw new ValidationException("Id не может быть меньше или равен нулю. Значение id: " + id);
-        } else if (!films.containsKey(id)) {
+            throw new ObjectNotFoundException("Id не может быть меньше или равен нулю. Значение id: " + id);
+        } else {
+            if (films.containsKey(id.longValue())) {
+                return films.get(id.longValue());
+            }
             log.debug("Указанный ID отсутствует. Значение ID: " + id);
-            throw new ObjectNotFoundException("Фильм с указанным ID отсутствует. Значение ID: " + id);
+            throw new ObjectNotFoundException("Пользователь с указанным ID отсутствует. Значение ID: " + id);
         }
-        return films.get(id);
     }
 
     public List<Film> getFilmsByRate(Integer limit) {
@@ -99,7 +101,7 @@ public class InMemoryFilmStorage {
                 .collect(Collectors.toList());
     }
 
-    private int compare(Film f0, Film f1) {
+    private int compare(Film f1, Film f0) {
         return Integer.compare(f0.getRating(), f1.getRating());
     }
 }
