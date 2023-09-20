@@ -4,23 +4,24 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
 
-import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 @RestController
 @Slf4j
 public class UserController {
 
-    private final Map<Long, User> users = new HashMap<Long, User>();
-    private Long iterator = 0L;
+    UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @PostMapping(value = "/users")
     public User createUser(@RequestBody User user) throws ValidationException {
-        System.out.println("Start POSTing user...");
+        /*System.out.println("Start POSTing user...");
         if (validateUser(user)) {
             if (user.getName() == null) {
                 user.setName(user.getLogin());
@@ -29,60 +30,53 @@ public class UserController {
             System.out.println(user);
             return addNewUser(user);
         }
-        throw new ValidationException("Validation failed");
+        throw new ValidationException("Validation failed");*/
+        return userService.createUser(user);
     }
 
     @PutMapping(value = "/users")
     public User updateUser(@RequestBody User user) throws ValidationException {
-        if (!users.containsKey(user.getId())) {
-            throw new ValidationException("Validation failed");
-        }
-        if (validateUser(user)) {
-            Long checkingUserId = user.getId();
-            if (checkingUserId == null) {
-                log.debug("Передан пользователь без ID. Переданные данные: {}", user);
-            } else if (user.equals(users.get(checkingUserId))) {
-                log.debug("Существует идентичный пользователь. Переданные данные: {}", user);
-            }
-            log.debug("Обновлен пользователь. Переданные данные: {}", user);
-            users.put(checkingUserId, user);
-            return user;
-        }
-        throw new ValidationException("Validation failed");
+        return userService.updateUser(user);
     }
 
     @GetMapping("/users")
     public List<User> getAllUsers() {
-        log.debug("Все пользователи на момент вызова метода: GET /users {}", users);
-        return List.copyOf(users.values());
+        /*log.debug("Все пользователи на момент вызова метода: GET /users {}", users);
+        return List.copyOf(users.values());*/
+        return userService.getAllUsers();
+    }
+
+    @GetMapping("/users/{id}")
+    public User getUserById(@PathVariable Integer id) throws ValidationException {
+        return userService.getUserById(id);
     }
 
 
-    private User addNewUser(User user) {
-        user.setId(++iterator);
+    private User addNewUser(User user) throws ValidationException {
+        /*user.setId(++iterator);
         users.put(iterator, user);
-        return user;
+        return user;*/
+        return userService.createUser(user);
     }
 
-    private boolean validateUser(User user) {
-        System.out.println("Start validation");
-        String email = user.getEmail();
-        String login = user.getLogin();
-        LocalDate date = user.getBirthday();
-        boolean isOK = true;
-        if (email == null || email.indexOf("@") == -1) {
-            log.debug("Некорректное значение поля email. Переданные данные: {}", email);
-            isOK = false;
-        }
-        if (login == null || login.indexOf(" ") != -1) {
-            log.debug("Некорректное значение поля login. Переданные данные: {}", login);
-            isOK = false;
-        }
-        if (date.isAfter(LocalDate.now())) {
-            log.debug("Поле birthday не может быть старше нынешней даты. Переданные данные: {}", date);
-            isOK = false;
-        }
-        return isOK;
+    @PutMapping("/users/{id}/friends/{friendId}")
+    public User addFriend(@PathVariable Integer id, @PathVariable Integer friendId) throws ValidationException {
+        return userService.addFriend(id, friendId);
+    }
+
+    @DeleteMapping("/users/{id}/friends/{friendId}")
+    public User deleteFriends(@PathVariable Integer id, @PathVariable Integer friendId) throws ValidationException {
+        return userService.removeFriend(id, friendId);
+    }
+
+    @GetMapping("/users/{id}/friends")
+    public List<User> getFriends(@PathVariable Integer id) throws ValidationException {
+        return userService.getFriendsByUserId(id);
+    }
+
+    @GetMapping("/users/{id}/friends/common/{otherId}")
+    public List<User> getMatualFriends(@PathVariable Integer id, @PathVariable Integer otherId) throws ValidationException {
+        return userService.getMatualFriends(id, otherId);
     }
 
 }
