@@ -2,7 +2,7 @@ package ru.yandex.practicum.filmorate.storage.film;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.exceptions.ObjectNotFoundException;
+import ru.yandex.practicum.filmorate.exceptions.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
@@ -30,14 +30,14 @@ public class InMemoryFilmStorage {
 
     public Film updateFilm(Film film) throws ValidationException {
         if (!films.containsKey(film.getId())) {
-            throw new ObjectNotFoundException("Validation failed");
+            throw new EntityNotFoundException("Validation failed");
         }
         if (validateFilm(film)) {
             Long checkingUserId = film.getId();
 
             if (checkingUserId == null) {
                 log.debug("Передан фильм без ID. Переданные данные: {}", film);
-                throw new ObjectNotFoundException("Передан фильм без ID. Переданные данные: {}" + film);
+                throw new EntityNotFoundException("Передан фильм без ID. Переданные данные: {}" + film);
             } else if (film.equals(films.get(checkingUserId))) {
                 log.debug("Существует идентичный фильм. Переданные данные: {}", film);
             }
@@ -84,13 +84,13 @@ public class InMemoryFilmStorage {
     public Film getFilmById(Integer id) throws ValidationException {
         if (id <= 0) {
             log.debug("Id не может быть меньше или равен нулю. Значение id: " + id);
-            throw new ObjectNotFoundException("Id не может быть меньше или равен нулю. Значение id: " + id);
+            throw new EntityNotFoundException("Id не может быть меньше или равен нулю. Значение id: " + id);
         } else {
             if (films.containsKey(id.longValue())) {
                 return films.get(id.longValue());
             }
             log.debug("Указанный ID отсутствует. Значение ID: " + id);
-            throw new ObjectNotFoundException("Пользователь с указанным ID отсутствует. Значение ID: " + id);
+            throw new EntityNotFoundException("Пользователь с указанным ID отсутствует. Значение ID: " + id);
         }
     }
 

@@ -38,8 +38,8 @@ public class UserService {
         User addingUser = inMemoryUserStorage.getUserById(addingId);
 
 
-        mainUser.getFriends().add(addingId.longValue());
-        addingUser.getFriends().add(mainId.longValue());
+        mainUser.getFriendIds().add(addingId.longValue());
+        addingUser.getFriendIds().add(mainId.longValue());
 
         updateUser(addingUser);
         return updateUser(mainUser);
@@ -54,41 +54,41 @@ public class UserService {
         User mainUser = inMemoryUserStorage.getUserById(mainId);
         User removingUser = inMemoryUserStorage.getUserById(removingId);
 
-        mainUser.getFriends().remove(removingUser);
-        removingUser.getFriends().remove(mainUser);
+        mainUser.getFriendIds().remove(removingUser);
+        removingUser.getFriendIds().remove(mainUser);
 
         updateUser(removingUser);
         return updateUser(mainUser);
     }
 
-    public List<Long> getFriends(int userId) throws ValidationException {
+    public List<Long> getfriendIds(int userId) throws ValidationException {
         User user = inMemoryUserStorage.getUserById(userId);
-        Set<Long> friends = user.getFriends();
+        Set<Long> friendIds = user.getFriendIds();
 
-        return List.copyOf(friends);
+        return List.copyOf(friendIds);
     }
 
-    public List<User> getFriendsByUserId(int userId) throws ValidationException {
+    public List<User> getfriendIdsByUserId(int userId) throws ValidationException {
         User user = inMemoryUserStorage.getUserById(userId);
-        Set<Long> friends = user.getFriends();
+        Set<Long> friendIds = user.getFriendIds();
         List<User> result = new ArrayList<User>();
-        for (Long id : friends) {
+        for (Long id : friendIds) {
             result.add(inMemoryUserStorage.getUserById(id.intValue()));
         }
         return List.copyOf(result);
     }
 
-    public List<User> getMatualFriends(int mainId, int otherId) throws ValidationException {
-        List<User> mainSet = getFriendsByUserId(mainId);
-        List<User> otherFriends = getFriendsByUserId(otherId);
+    public List<User> getMatualfriendIds(int mainId, int otherId) throws ValidationException {
+        List<User> mainSet = getfriendIdsByUserId(mainId);
+        List<User> otherfriendIds = getfriendIdsByUserId(otherId);
 
-        if (mainSet == null || otherFriends == null) {
+        if (mainSet == null || otherfriendIds == null) {
             return Collections.emptyList();
         }
 
 
         List<User> intersection = new ArrayList<>(mainSet);
-        intersection.retainAll(otherFriends);
+        intersection.retainAll(otherfriendIds);
         return List.copyOf(intersection);
     }
 }

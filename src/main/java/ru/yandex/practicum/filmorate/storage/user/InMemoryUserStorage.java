@@ -2,7 +2,7 @@ package ru.yandex.practicum.filmorate.storage.user;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.exceptions.ObjectNotFoundException;
+import ru.yandex.practicum.filmorate.exceptions.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -33,7 +33,7 @@ public class InMemoryUserStorage {
 
     public User updateUser(User user) throws ValidationException {
         if (!users.containsKey(user.getId())) {
-            throw new ObjectNotFoundException("Object not found: " + user.getId());
+            throw new EntityNotFoundException("Object not found: " + user.getId());
         }
         if (validateUser(user)) {
             Long checkingUserId = user.getId();
@@ -63,13 +63,13 @@ public class InMemoryUserStorage {
     public User getUserById(Integer id) throws ValidationException {
         if (id <= 0) {
             log.debug("Id не может быть меньше или равен нулю. Значение id: " + id);
-            throw new ObjectNotFoundException("Id не может быть меньше или равен нулю. Значение id: " + id);
+            throw new EntityNotFoundException("Id не может быть меньше или равен нулю. Значение id: " + id);
         } else {
             if (users.containsKey(id.longValue())) {
                 return users.get(id.longValue());
             }
             log.debug("Указанный ID отсутствует. Значение ID: " + id);
-            throw new ObjectNotFoundException("Пользователь с указанным ID отсутствует. Значение ID: " + id);
+            throw new EntityNotFoundException("Пользователь с указанным ID отсутствует. Значение ID: " + id);
         }
     }
 
