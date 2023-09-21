@@ -61,14 +61,14 @@ public class UserService {
         return updateUser(mainUser);
     }
 
-    public List<Long> getfriendIds(int userId) throws ValidationException {
+    public List<Long> getFriendIds(int userId) throws ValidationException {
         User user = inMemoryUserStorage.getUserById(userId);
         Set<Long> friendIds = user.getFriendIds();
 
         return List.copyOf(friendIds);
     }
 
-    public List<User> getfriendIdsByUserId(int userId) throws ValidationException {
+    public List<User> getFriendIdsByUserId(int userId) throws ValidationException {
         User user = inMemoryUserStorage.getUserById(userId);
         Set<Long> friendIds = user.getFriendIds();
         List<User> result = new ArrayList<User>();
@@ -79,16 +79,16 @@ public class UserService {
     }
 
     public List<User> getMatualfriendIds(int mainId, int otherId) throws ValidationException {
-        List<User> mainSet = getfriendIdsByUserId(mainId);
-        List<User> otherfriendIds = getfriendIdsByUserId(otherId);
+        List<User> mainSet = getFriendIdsByUserId(mainId);
+        List<User> otherFriendIds = getFriendIdsByUserId(otherId);
 
-        if (mainSet == null || otherfriendIds == null) {
+        if (mainSet == null || otherFriendIds == null) {
             return Collections.emptyList();
         }
 
 
         List<User> intersection = new ArrayList<>(mainSet);
-        intersection.retainAll(otherfriendIds);
+        intersection.retainAll(otherFriendIds);
         return List.copyOf(intersection);
     }
 }

@@ -45,23 +45,23 @@ public class UserController {
         return userService.createUser(user);
     }
 
-    @PutMapping("/users/{id}/friendIds/{friendId}")
+    @PutMapping("/users/{id}/friends/{friendId}")
     public User addFriend(@PathVariable Integer id, @PathVariable Integer friendId) throws ValidationException {
         return userService.addFriend(id, friendId);
     }
 
-    @DeleteMapping("/users/{id}/friendIds/{friendId}")
-    public User deletefriendIds(@PathVariable Integer id, @PathVariable Integer friendId) throws ValidationException {
+    @DeleteMapping("/users/{id}/friends/{friendId}")
+    public User deleteFriendIds(@PathVariable Integer id, @PathVariable Integer friendId) throws ValidationException {
         return userService.removeFriend(id, friendId);
     }
 
-    @GetMapping("/users/{id}/friendIds")
-    public List<User> getfriendIds(@PathVariable Integer id) throws ValidationException {
-        return userService.getfriendIdsByUserId(id);
+    @GetMapping("/users/{id}/friends")
+    public List<User> getFriendIds(@PathVariable Integer id) throws ValidationException {
+        return userService.getFriendIdsByUserId(id);
     }
 
-    @GetMapping("/users/{id}/friendIds/common/{otherId}")
-    public List<User> getMatualfriendIds(@PathVariable Integer id, @PathVariable Integer otherId) throws ValidationException {
+    @GetMapping("/users/{id}/friends/common/{otherId}")
+    public List<User> getMatualFriendIds(@PathVariable Integer id, @PathVariable Integer otherId) throws ValidationException {
         return userService.getMatualfriendIds(id, otherId);
     }
 
