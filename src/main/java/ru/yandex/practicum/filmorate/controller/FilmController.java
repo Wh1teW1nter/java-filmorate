@@ -1,89 +1,64 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.service.FilmService;
 
-import java.time.LocalDate;
-import java.util.HashMap;
+import javax.validation.constraints.Min;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @Slf4j
 public class FilmController {
-    private final Map<Long, Film> films = new HashMap<Long, Film>();
-    private Long iterator = 0L;
+
+    private FilmService filmService;
+
+    @Autowired
+    public FilmController(FilmService filmService) {
+        this.filmService = filmService;
+    }
 
     @PostMapping(value = "/films")
     public Film createFilm(@RequestBody Film film) throws ValidationException {
-        if (validateFilm(film)) {
-            log.debug("Добавлен фильм. Переданные данные: {}", film);
-            return addNewFilm(film);
-        } else {
-            throw new ValidationException("Validation failed");
-        }
+
+        return filmService.createFilm(film);
+
     }
 
     @PutMapping(value = "/films")
     public Film updateFilm(@RequestBody Film film) throws ValidationException {
-        if (!films.containsKey(film.getId())) {
-            throw new ValidationException("Validation failed");
-        }
-        if (validateFilm(film)) {
-            Long checkingUserId = film.getId();
 
-            if (checkingUserId == null) {
-                log.debug("Передан пользователь без ID. Переданные данные: {}", film);
-            } else if (film.equals(films.get(checkingUserId))) {
-                log.debug("Существует идентичный фильм. Переданные данные: {}", film);
-            }
-
-            log.debug("Обновлен пользователь. Переданные данные: {}", film);
-            films.put(checkingUserId, film);
-            return film;
-        } else {
-            throw new ValidationException("Validation failed");
-        }
+        return filmService.updateFilm(film);
     }
 
     @GetMapping("/films")
     public List<Film> getAllFilms() {
-        log.debug("Все пользователи на момент вызова метода: GET /films {}", films);
-        return List.copyOf(films.values());
+        return filmService.getAllFilms();
     }
 
-
-    private Film addNewFilm(Film film) {
-        film.setId(++iterator);
-        films.put(iterator, film);
-        return film;
+    @PutMapping("/films/{id}/like/{userId}")
+    public Film addLikeFilm(@PathVariable Integer id, @PathVariable Integer userId) throws ValidationException {
+        return filmService.addLikeFilm(userId, id);
     }
 
-    private boolean validateFilm(Film film) {
-        String name = film.getName();
-        String description = film.getDescription();
-        LocalDate date = film.getReleaseDate();
-        int duration = film.getDuration();
-        LocalDate filmStart = LocalDate.of(1895, 12, 28);
-        boolean isOK = true;
-        if (name == null || name.equals("")) {
-            log.debug("Название поля не может быть пустым. Переданное поле name: {}", name);
-            isOK = false;
-        }
-        if (description.length() > 200) {
-            log.debug("Максимальная длина описания - 200 символов. Длина переданного описания: {}", description.length());
-            isOK = false;
-        }
-        if (date.isBefore(filmStart)) {
-            log.debug("Поле birthday не может быть старше нынешней даты. Переданные данные: {}", date);
-            isOK = false;
-        }
-        if (duration <= 0) {
-            log.debug("Продолжительность должна быть положительной. Переданная продолжительность: {}. ID фильма :{} ", duration, film.getId());
-            isOK = false;
-        }
-        return isOK;
+    @DeleteMapping("/films/{id}/like/{userId}")
+    public Film deleteLikeFilm(@PathVariable Integer id, @PathVariable Integer userId) throws ValidationException {
+        return filmService.removeLikeFilm(userId, id);
+    }
+
+    @GetMapping("/films/popular")
+    public List<Film> getRatedFilms(@RequestParam(value = "count", required = false, defaultValue = "10")
+                                    @Min(1) Integer count) {
+
+        return filmService.getFilmsByRate(count);
+
+    }
+
+    @GetMapping("/films/{id}")
+    public Film getFilmById(@PathVariable Integer id) throws ValidationException {
+        return filmService.getFilmById(id);
     }
 }
