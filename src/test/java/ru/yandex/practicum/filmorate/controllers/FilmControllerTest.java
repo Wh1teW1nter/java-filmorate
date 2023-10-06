@@ -1,4 +1,5 @@
 package ru.yandex.practicum.filmorate.controllers;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,7 +8,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
 
@@ -46,8 +46,8 @@ class FilmControllerTest {
                 .releaseDate(VALID_DATE)
                 .build();
         String body = mapper.writeValueAsString(newFilm);
-        this.mockMvc.perform(post(URL).content(body).contentType(MediaType.APPLICATION_JSON)).
-                andExpect(status().isOk());
+        this.mockMvc.perform(post(URL).content(body).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -59,8 +59,8 @@ class FilmControllerTest {
                 .releaseDate(VALID_DATE)
                 .build();
         String body = mapper.writeValueAsString(newFilm);
-        this.mockMvc.perform(post(URL).content(body).contentType(MediaType.APPLICATION_JSON)).
-                andExpect(status().isOk());
+        this.mockMvc.perform(post(URL).content(body).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -72,8 +72,8 @@ class FilmControllerTest {
                 .releaseDate(VALID_DATE)
                 .build();
         String body = mapper.writeValueAsString(newFilm);
-        this.mockMvc.perform(post(URL).content(body).contentType(MediaType.APPLICATION_JSON)).
-                andExpect(status().is4xxClientError());
+        this.mockMvc.perform(post(URL).content(body).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is4xxClientError());
     }
 
     @Test
@@ -85,8 +85,8 @@ class FilmControllerTest {
                 .releaseDate(VALID_DATE)
                 .build();
         String body = mapper.writeValueAsString(newFilm);
-        this.mockMvc.perform(post(URL).content(body).contentType(MediaType.APPLICATION_JSON)).
-                andExpect(status().is4xxClientError());
+        this.mockMvc.perform(post(URL).content(body).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is4xxClientError());
     }
 
     @Test
@@ -98,8 +98,8 @@ class FilmControllerTest {
                 .releaseDate(LocalDate.of(1895, 12, 28))
                 .build();
         String body = mapper.writeValueAsString(newFilm);
-        this.mockMvc.perform(post(URL).content(body).contentType(MediaType.APPLICATION_JSON)).
-                andExpect(status().isOk());
+        this.mockMvc.perform(post(URL).content(body).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -113,8 +113,8 @@ class FilmControllerTest {
                 .build();
         updatedFilm.setId(1L);
         String updatedBody = mapper.writeValueAsString(updatedFilm);
-        this.mockMvc.perform(put(URL).content(updatedBody).contentType(MediaType.APPLICATION_JSON)).
-                andExpect(status().isOk());
+        this.mockMvc.perform(put(URL).content(updatedBody).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -128,8 +128,8 @@ class FilmControllerTest {
                 .build();
         updatedFilm.setId(1L);
         String body = mapper.writeValueAsString(updatedFilm);
-        this.mockMvc.perform(put(URL).content(body).contentType(MediaType.APPLICATION_JSON)).
-                andExpect(status().isOk());
+        this.mockMvc.perform(put(URL).content(body).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -143,8 +143,8 @@ class FilmControllerTest {
                 .build();
         updatedFilm.setId(1L);
         String body = mapper.writeValueAsString(updatedFilm);
-        this.mockMvc.perform(put(URL).content(body).contentType(MediaType.APPLICATION_JSON)).
-                andExpect(status().is4xxClientError());
+        this.mockMvc.perform(put(URL).content(body).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is4xxClientError());
     }
 
     @Test
@@ -158,8 +158,8 @@ class FilmControllerTest {
                 .build();
         updatedFilm.setId(1L);
         String body = mapper.writeValueAsString(updatedFilm);
-        this.mockMvc.perform(post(URL).content(body).contentType(MediaType.APPLICATION_JSON)).
-                andExpect(status().is4xxClientError());
+        this.mockMvc.perform(post(URL).content(body).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is4xxClientError());
     }
 
     @Test
@@ -173,8 +173,8 @@ class FilmControllerTest {
                 .build();
         updatedFilm.setId(1L);
         String body = mapper.writeValueAsString(updatedFilm);
-        this.mockMvc.perform(post(URL).content(body).contentType(MediaType.APPLICATION_JSON)).
-                andExpect(status().isOk());
+        this.mockMvc.perform(post(URL).content(body).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 
     private void createFilm() throws Exception {
@@ -185,8 +185,8 @@ class FilmControllerTest {
                 .releaseDate(VALID_DATE)
                 .build();
         String newBody = mapper.writeValueAsString(newFilm);
-        this.mockMvc.perform(post(URL).content(newBody).contentType(MediaType.APPLICATION_JSON)).
-                andExpect(status().isOk());
+        this.mockMvc.perform(post(URL).content(newBody).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 
     /*
