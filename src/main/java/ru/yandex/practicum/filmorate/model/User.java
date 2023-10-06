@@ -17,6 +17,7 @@ import java.util.Set;
 @Builder
 public class User {
 
+    private final Map<Long, Boolean> friends = new HashMap<>();
     private Long id;
     @NotBlank
     @Email
@@ -28,8 +29,6 @@ public class User {
     private LocalDate birthday;
     @JsonIgnore
     private Set<Long> friendsId;
-    private final Map<Long, Boolean> friends = new HashMap<>();
-
 
     public boolean setFriendsId(Long friendId) {
         if (friendsId == null) {

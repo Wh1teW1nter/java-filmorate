@@ -4,9 +4,7 @@ package ru.yandex.practicum.filmorate.storage.impl;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import ru.yandex.practicum.filmorate.exceptions.film.FilmNotExistException;
 import ru.yandex.practicum.filmorate.exceptions.rating.RatingNotFoundException;
-import ru.yandex.practicum.filmorate.mapper.FilmMapper;
 import ru.yandex.practicum.filmorate.mapper.RatingMapper;
 import ru.yandex.practicum.filmorate.model.Rating;
 import ru.yandex.practicum.filmorate.storage.dao.RatingDao;
@@ -14,7 +12,6 @@ import ru.yandex.practicum.filmorate.storage.dao.RatingDao;
 import java.util.List;
 import java.util.Optional;
 
-import static ru.yandex.practicum.filmorate.storage.sqloperation.FilmSqlOperation.GET_FILM_BY_FILM_ID;
 import static ru.yandex.practicum.filmorate.storage.sqloperation.RatingSqlOperation.GET_ALL_RATINGS;
 import static ru.yandex.practicum.filmorate.storage.sqloperation.RatingSqlOperation.GET_RATING_BY_RATING_ID;
 

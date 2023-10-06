@@ -40,7 +40,7 @@ public class FilmDaoImpl implements FilmDao {
     @Override
     public List<Film> findAll() {
         List<Film> foundedFilm = jdbcTemplate.query(GET_ALL_FILMS.getTitle(), new FilmMapper());
-        for (Film film: foundedFilm) {
+        for (Film film : foundedFilm) {
             if (film.getGenres() == null) {
                 film.setGenres(genreDao.getGenresByFilmId(film.getId()));
             }
@@ -103,7 +103,7 @@ public class FilmDaoImpl implements FilmDao {
     @Override
     public List<Film> getSortedFilmsByLikes(Long count) {
         List<Film> sortedFilm = jdbcTemplate.query(GET_MOST_POPULAR_FILMS.getTitle(), new FilmMapper(), count);
-        for (Film film: sortedFilm) {
+        for (Film film : sortedFilm) {
             if (film.getGenres() == null) {
                 film.setGenres(new ArrayList<Genre>());
             }

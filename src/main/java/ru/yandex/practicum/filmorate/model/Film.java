@@ -14,6 +14,7 @@ import java.util.*;
 @Builder
 public class Film {
 
+    private final Rating mpa;
     private Long id;
     @NotNull
     private String name;
@@ -25,7 +26,6 @@ public class Film {
     @JsonIgnore
     private Set<Long> filmLikes;
     private List<Genre> genres;
-    private final Rating mpa;
 
     public boolean setFilmLikes(Long friendId) {
         if (filmLikes == null) {

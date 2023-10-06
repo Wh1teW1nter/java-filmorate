@@ -44,7 +44,7 @@ public class UserService {
         if (!user.setFriendsId(friendId)) {
             throw new FriendNotAddedException("Друг с id " + friendId + " не был добавлен");
         }
-        if (friend.setFriendsId(userId)){
+        if (friend.setFriendsId(userId)) {
             return user;
         } else {
             throw new FriendNotAddedException("Друг с id " + friendId + " не был добавлен");

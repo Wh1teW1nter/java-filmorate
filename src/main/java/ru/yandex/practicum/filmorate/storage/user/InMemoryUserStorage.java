@@ -2,9 +2,9 @@ package ru.yandex.practicum.filmorate.storage.user;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
-import ru.yandex.practicum.filmorate.exceptions.user.*;
+import ru.yandex.practicum.filmorate.exceptions.user.UserNotExistException;
+import ru.yandex.practicum.filmorate.model.User;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -16,9 +16,8 @@ import java.util.Map;
 @Slf4j
 public class InMemoryUserStorage {
 
-    private Long generatorId = 0L;
     private final Map<Long, User> users = new HashMap<>();
-
+    private Long generatorId = 0L;
 
     public List<User> findAll() {
         return new ArrayList<>(users.values());

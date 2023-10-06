@@ -2,9 +2,9 @@ package ru.yandex.practicum.filmorate.storage.film;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
-import ru.yandex.practicum.filmorate.exceptions.film.*;
+import ru.yandex.practicum.filmorate.exceptions.film.FilmNotExistException;
+import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -16,9 +16,8 @@ import java.util.Map;
 @Slf4j
 public class InMemoryFilmStorage {
 
-    private Long generatorId = 0L;
     private final Map<Long, Film> films = new HashMap<>();
-
+    private Long generatorId = 0L;
 
     public List<Film> findAll() {
         return new ArrayList<>(films.values());
