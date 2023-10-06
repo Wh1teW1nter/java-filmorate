@@ -31,7 +31,7 @@ public class User {
     private final Map<Long, Boolean> friends = new HashMap<>();
 
 
-    public boolean setFriendsId (Long friendId) {
+    public boolean setFriendsId(Long friendId) {
         if (friendsId == null) {
             friendsId = new HashSet<Long>();
             return friendsId.add(friendId);
@@ -39,11 +39,11 @@ public class User {
         return friendsId.add(friendId);
     }
 
-    public void removeFriend (Long id) {
+    public void removeFriend(Long id) {
         friendsId.remove(id);
     }
 
-    public Set<Long> getFriendsId () {
+    public Set<Long> getFriendsId() {
         if (friendsId == null) {
             friendsId = new HashSet<Long>();
             return friendsId;
