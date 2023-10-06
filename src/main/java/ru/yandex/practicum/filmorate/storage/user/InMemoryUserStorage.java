@@ -58,7 +58,7 @@ public class InMemoryUserStorage {
         if ((user.getName() == null) || (user.getName().isBlank())) {
             user.setName(user.getLogin());
         }
-        if (user.getEmail().contains(" ")) {
+        if (user.getEmail().isEmpty()) {
             log.debug("Email пользователя не должен содежать пробелы", user.getEmail());
             throw new ValidationException("Email пользователя не должен содежать пробелы");
         }
