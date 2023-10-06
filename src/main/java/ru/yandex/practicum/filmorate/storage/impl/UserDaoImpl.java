@@ -61,8 +61,8 @@ public class UserDaoImpl implements UserDao {
     @Override
     public Optional<User> getUserById(Long userId) {
         try {
-            return Optional.ofNullable(jdbcTemplate.
-                    queryForObject(GET_USER_BY_USER_ID.getTitle(), new UserMapper(), userId));
+            return Optional.ofNullable(
+                    jdbcTemplate.queryForObject(GET_USER_BY_USER_ID.getTitle(), new UserMapper(), userId));
         } catch (DataAccessException e) {
             throw new UserNotFoundException("Пользователь не найден" + e.getMessage());
         }

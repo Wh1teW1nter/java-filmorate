@@ -32,8 +32,8 @@ public class RatingDaoImpl implements RatingDao {
     @Override
     public Optional<Rating> getRatingById(Long ratingId) {
         try {
-            return Optional.ofNullable
-                    (jdbcTemplate.queryForObject(GET_RATING_BY_RATING_ID.getTitle(), new RatingMapper(), ratingId));
+            return Optional.ofNullable(
+                    jdbcTemplate.queryForObject(GET_RATING_BY_RATING_ID.getTitle(), new RatingMapper(), ratingId));
         } catch (DataAccessException e) {
             throw new RatingNotFoundException("Рейтинг не найден" + e.getMessage());
         }
