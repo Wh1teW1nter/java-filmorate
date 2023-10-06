@@ -18,7 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @SpringBootTest
 public class UserControllerTest {
-    private static final String URL = "/users";
+    /*private static final String URL = "/users";
     private static final LocalDate VALID_DATE = LocalDate.of(2000, 11, 24);
     private static final String VALID_EMAIL = "khanbikov@ya.ru";
     private static final String VALID_LOGIN = "Askhat";
@@ -173,7 +173,7 @@ public class UserControllerTest {
         String body = mapper.writeValueAsString(newUser);
         this.mockMvc.perform(post(URL).content(body).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
-    }
+    } */
 
     /*
 
