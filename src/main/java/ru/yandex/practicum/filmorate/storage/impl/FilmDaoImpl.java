@@ -118,8 +118,8 @@ public class FilmDaoImpl implements FilmDao {
 
     private Optional<Film> getValidFilmByFilmId(Long filmId) {
         try {
-            return Optional.ofNullable(jdbcTemplate.
-                    queryForObject(GET_FILM_BY_FILM_ID.getTitle(), new FilmMapper(), filmId));
+            return Optional.ofNullable(jdbcTemplate
+                    .queryForObject(GET_FILM_BY_FILM_ID.getTitle(), new FilmMapper(), filmId));
         } catch (DataAccessException e) {
             throw new FilmNotExistException("Фильм не найден" + e.getMessage());
         }
