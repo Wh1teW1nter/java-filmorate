@@ -2,8 +2,8 @@ package ru.yandex.practicum.filmorate.storage.film;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.exceptions.film.FilmNotExistException;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
+import ru.yandex.practicum.filmorate.exceptions.film.FilmNotExistException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.LocalDate;
@@ -32,7 +32,7 @@ public class InMemoryFilmStorage {
         return film;
     }
 
-    public Film update( Film film) {
+    public Film update(Film film) {
         validateFilm(film);
         if (!films.containsKey(film.getId())) {
             throw new FilmNotExistException("В списке нет такого фильма");
