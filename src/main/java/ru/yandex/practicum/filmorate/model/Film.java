@@ -26,7 +26,8 @@ public class Film {
     private Set<Long> filmLikes;
     private List<Genre> genres;
     private final Rating mpa;
-    public boolean setFilmLikes (Long friendId) {
+
+    public boolean setFilmLikes(Long friendId) {
         if (filmLikes == null) {
             filmLikes = new HashSet<Long>();
             return filmLikes.add(friendId);
@@ -34,11 +35,11 @@ public class Film {
         return filmLikes.add(friendId);
     }
 
-    public void removeLike (Long id) {
+    public void removeLike(Long id) {
         filmLikes.remove(id);
     }
 
-    public Set<Long> getFilmLikes () {
+    public Set<Long> getFilmLikes() {
         if (filmLikes == null) {
             filmLikes = new HashSet<Long>();
             return filmLikes;
