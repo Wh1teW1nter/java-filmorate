@@ -31,8 +31,8 @@ public class GenreDaoImpl implements GenreDao {
     @Override
     public Optional<Genre> getGenreById(Long genreId) {
         try {
-            return Optional.ofNullable
-                    (jdbcTemplate.queryForObject(GET_GENRE_BY_GENRE_ID.getTitle(), new GenreMapper(), genreId));
+            return Optional.ofNullable(
+                    jdbcTemplate.queryForObject(GET_GENRE_BY_GENRE_ID.getTitle(), new GenreMapper(), genreId));
         } catch (DataAccessException e) {
             throw new GenreNotFoundException("Рейтинг не найден" + e.getMessage());
         }
