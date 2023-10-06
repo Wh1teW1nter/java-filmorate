@@ -41,8 +41,7 @@ public class UserService {
     public User addFriend(Long userId, Long friendId) {
         User user = inMemoryUserStorage.getUserById(userId);
         User friend = inMemoryUserStorage.getUserById(friendId);
-        if (user.setFriendsId(friendId)){
-        } else {
+        if (!user.setFriendsId(friendId)) {
             throw new FriendNotAddedException("Друг с id " + friendId + " не был добавлен");
         }
         if (friend.setFriendsId(userId)){
