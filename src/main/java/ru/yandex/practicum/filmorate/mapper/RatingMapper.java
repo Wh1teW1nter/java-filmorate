@@ -10,8 +10,8 @@ public class RatingMapper implements RowMapper<Rating> {
 
     @Override
     public Rating mapRow(ResultSet resultSet, int rowNum) throws SQLException {
-        return Rating.builder().
-                id(resultSet.getLong("mpa_id"))
+        return Rating.builder()
+                .id(resultSet.getLong("mpa_id"))
                 .name(resultSet.getString("mpa_name"))
                 .build();
     }
