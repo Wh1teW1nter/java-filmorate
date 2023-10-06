@@ -4,11 +4,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
 import ru.yandex.practicum.filmorate.controllers.implcontrollers.FilmImplController;
 import ru.yandex.practicum.filmorate.controllers.implcontrollers.GenreImplController;
 import ru.yandex.practicum.filmorate.controllers.implcontrollers.MpaImplController;
-import ru.yandex.practicum.filmorate.controllers.implcontrollers.UserImplController;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.exceptions.film.FilmNotExistException;
 import ru.yandex.practicum.filmorate.exceptions.film.LikeNotAddedException;
@@ -22,8 +20,8 @@ public class FilmControllerExceptionHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleValidationException (final ValidationException e) {
-        return new ErrorResponse ("Ошибка валидации", e.getMessage());
+    public ErrorResponse handleValidationException(final ValidationException e) {
+        return new ErrorResponse("Ошибка валидации", e.getMessage());
     }
 
     @ExceptionHandler({LikeNotAddedException.class,
@@ -32,8 +30,8 @@ public class FilmControllerExceptionHandler {
             RatingNotFoundException.class,
             GenreNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleNotFoundException (final RuntimeException e) {
-        return new ErrorResponse ("Ошибка поиска", e.getMessage());
+    public ErrorResponse handleNotFoundException(final RuntimeException e) {
+        return new ErrorResponse("Ошибка поиска", e.getMessage());
     }
 
     @ExceptionHandler
