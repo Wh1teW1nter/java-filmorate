@@ -1,17 +1,15 @@
 package ru.yandex.practicum.filmorate.controllers.implcontrollers;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.implservice.FilmServiceImpl;
-import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import java.util.List;
 import java.util.Optional;
+
 @RestController
 @RequestMapping("/films")
 @Slf4j
@@ -37,7 +35,6 @@ public class FilmImplController {
         Optional<Film> foundedFilm = filmService.findById(filmId);
         log.info("Отправлен ответ на GET-запрос /films/{} с телом: {}", filmId, foundedFilm);
         return foundedFilm;
-        //return filmService.findById(filmId);
 
     }
 
