@@ -30,29 +30,29 @@ public class FilmImplController {
     }
 
     @GetMapping("/{filmId}")
-    public Optional<Film> findById(@PathVariable("filmId") @Min(0) Long filmId) {
+    public Film findById(@PathVariable("filmId") @Min(0) Long filmId) {
         log.info("Получен GET-запрос /films/{}", filmId);
         Optional<Film> foundedFilm = filmService.findById(filmId);
         log.info("Отправлен ответ на GET-запрос /films/{} с телом: {}", filmId, foundedFilm);
-        return foundedFilm;
+
+        return foundedFilm.get();
 
     }
 
     @PostMapping
-    public Optional<Film> save(@RequestBody @Valid Film film) {
+    public Film save(@RequestBody @Valid Film film) {
         log.info("Пришел POST-запрос /films с телом: {}", film);
-        Optional<Film> createdFilm = filmService.save(film);
+        Film createdFilm = filmService.save(film);
         log.info("Отправлен ответ на POST-запрос /films с телом: {}", createdFilm);
         return createdFilm;
-        //return filmService.save(film);
     }
 
     @PutMapping
-    public Optional<Film> update(@RequestBody @Valid Film film) {
+    public Film update(@RequestBody @Valid Film film) {
         log.info("Пришел PUT-запрос /films с телом: {}", film);
         Optional<Film> updatedFilm = filmService.update(film);
         log.info("Отправлен ответ на PUT-запрос /films с телом: {}", updatedFilm);
-        return updatedFilm;
+        return updatedFilm.get();
         //return filmService.update(film);
     }
 

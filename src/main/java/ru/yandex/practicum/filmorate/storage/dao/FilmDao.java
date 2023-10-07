@@ -9,7 +9,7 @@ public interface FilmDao {
 
     List<Film> findAll();
 
-    Optional<Film> save(Film film);
+    Film save(Film film);
 
     Optional<Film> update(Film film);
 

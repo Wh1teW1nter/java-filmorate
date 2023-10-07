@@ -49,10 +49,10 @@ public class FilmDaoImpl implements FilmDao {
     }
 
     @Override
-    public Optional<Film> save(Film film) {
+    public Film save(Film film) {
         filmInsertAndSetId(film);
         addGenresToFilm(film);
-        return Optional.of(film);
+        return film;
     }
 
     @Override
