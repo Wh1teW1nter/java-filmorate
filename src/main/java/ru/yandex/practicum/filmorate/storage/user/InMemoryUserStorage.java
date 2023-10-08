@@ -2,11 +2,12 @@ package ru.yandex.practicum.filmorate.storage.user;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.exceptions.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
+import ru.yandex.practicum.filmorate.exceptions.user.UserNotExistException;
 import ru.yandex.practicum.filmorate.model.User;
 
-import java.time.LocalDate;
+import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,84 +16,58 @@ import java.util.Map;
 @Slf4j
 public class InMemoryUserStorage {
 
-    private final Map<Long, User> users = new HashMap<Long, User>();
-    private Long iterator = 0L;
+    private final Map<Long, User> users = new HashMap<>();
+    private Long generatorId = 0L;
 
-    public User createUser(User user) throws ValidationException {
-        System.out.println("Start POSTing user...");
-        if (validateUser(user)) {
-            if (user.getName() == null || user.getName().equals("")) {
-                user.setName(user.getLogin());
-            }
-            log.debug("Создан пользователь. Переданные данные: {}", user);
-            System.out.println(user);
-            return addNewUser(user);
-        }
-        throw new ValidationException("Validation failed");
+    public List<User> findAll() {
+        return new ArrayList<>(users.values());
     }
 
-    public User updateUser(User user) throws ValidationException {
-        if (!users.containsKey(user.getId())) {
-            throw new EntityNotFoundException("Object not found: " + user.getId());
+    public User create(@Valid User user) {
+        validateUser(user);
+        if (users.containsValue(user)) {
+            throw new ValidationException("Пользователь уже существует");
         }
-        if (validateUser(user)) {
-            Long checkingUserId = user.getId();
-            if (checkingUserId == null) {
-                log.debug("Передан пользователь без ID. Переданные данные: {}", user);
-            } else if (user.equals(users.get(checkingUserId))) {
-                log.debug("Существует идентичный пользователь. Переданные данные: {}", user);
-            }
-            log.debug("Обновлен пользователь. Переданные данные: {}", user);
-            users.put(checkingUserId, user);
-            return user;
-        }
-        throw new ValidationException("Validation failed");
-    }
-
-    public List<User> getAllUsers() {
-        log.debug("Все пользователи на момент вызова метода: GET /users {}", users);
-        return List.copyOf(users.values());
-    }
-
-    private User addNewUser(User user) {
-        user.setId(++iterator);
-        users.put(iterator, user);
+        Long id = ++generatorId;
+        user.setId(id);
+        users.put(id, user);
+        log.debug(user.toString());
         return user;
     }
 
-    public User getUserById(Integer id) throws ValidationException {
-        if (id <= 0) {
-            log.debug("Id не может быть меньше или равен нулю. Значение id: " + id);
-            throw new EntityNotFoundException("Id не может быть меньше или равен нулю. Значение id: " + id);
-        } else {
-            if (users.containsKey(id.longValue())) {
-                return users.get(id.longValue());
-            }
-            log.debug("Указанный ID отсутствует. Значение ID: " + id);
-            throw new EntityNotFoundException("Пользователь с указанным ID отсутствует. Значение ID: " + id);
+    public User update(@Valid User user) {
+        validateUser(user);
+        if (!users.containsKey(user.getId())) {
+            throw new UserNotExistException("Такого пользователя не существует");
+        }
+        users.put(user.getId(), user);
+        log.debug(user.toString());
+        return user;
+    }
+
+    public User getUserById(Long id) {
+        User user = users.get(id);
+        if (user == null) {
+            throw new UserNotExistException("Такого пользователя не существует");
+        }
+        return user;
+    }
+
+    public void validateUser(User user) {
+        if ((user.getName() == null) || (user.getName().isBlank())) {
+            user.setName(user.getLogin());
+        }
+        if (user.getEmail().isEmpty()) {
+            log.debug("Email пользователя не должен содежать пробелы", user.getEmail());
+            throw new ValidationException("Email пользователя не должен содежать пробелы");
+        }
+        if (user.getLogin().contains(" ")) {
+            log.debug("Логин не должен содежать пробелы", user.getEmail());
+            throw new ValidationException("Логин не должен содежать пробелы");
         }
     }
 
-
-    private boolean validateUser(User user) {
-        System.out.println("Start validation");
-        String email = user.getEmail();
-        String login = user.getLogin();
-        LocalDate date = user.getBirthday();
-        boolean isOK = true;
-        if (email == null || email.indexOf("@") == -1) {
-            log.debug("Некорректное значение поля email. Переданные данные: {}", email);
-            isOK = false;
-        }
-        if (login == null || login.indexOf(" ") != -1) {
-            log.debug("Некорректное значение поля login. Переданные данные: {}", login);
-            isOK = false;
-        }
-        if (date.isAfter(LocalDate.now())) {
-            log.debug("Поле birthday не может быть старше нынешней даты. Переданные данные: {}", date);
-            isOK = false;
-        }
-        return isOK;
+    public boolean isUserExist(Long userId) {
+        return users.containsKey(userId);
     }
-
 }
