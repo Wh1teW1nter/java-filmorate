@@ -73,3 +73,13 @@ create table if not exists film_like
     FOREIGN KEY(film_id) REFERENCES films(film_id) ON DELETE CASCADE,
     FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
+
+drop table if exists review cascade;
+CREATE TABLE if not exists "review" (
+    "review_id" INTEGER not null primary key auto_increment,
+    "content" varchar(255) NOT NULL,
+    "is_positive" BOOLEAN NOT NULL,
+    "user_id" INTEGER NOT NULL,
+    "film_id" INTEGER NOT NULL,
+    "useful" INTEGER NOT NULL DEFAULT 0
+    );
