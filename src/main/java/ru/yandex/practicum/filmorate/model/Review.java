@@ -4,22 +4,22 @@ import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
 @Data
 @Builder
 public class Review {
-    private Long id;
+    private Long reviewId;
     @NotBlank
     private String content;
-    @NotBlank
-    private boolean isPositive;
-    @NotBlank
+    @NotNull
+    private Boolean isPositive;
+    @NotNull
     private Long userId;
-    @NotBlank
+    @NotNull
     private Long filmId;
-    @NotBlank
     private Long useful;
 
     public Map<String, Object> toMap() {
