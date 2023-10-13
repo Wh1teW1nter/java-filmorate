@@ -7,11 +7,11 @@ public enum RecommendationSqlOperation {
             "FROM films AS f " +
             "JOIN rating AS r ON f.mpa_id = r.mpa_id" +
             "WHERE f.film_id in " +
-            "(SELECT DISTINCT fl.film_id " +
-            "FROM film_like AS fl WHERE fl.user_id in (SELECT fl1.user_id FROM film_like AS fl1 WHERE fl1.film_id in " +
-            "(SELECT fl2.film_id from film_like AS fl2 where fl2.user_id = ?) and fl1.user_id != ? GROUP BY fl1.user_id limit 1) " +
+            "(SELECT DISTINCT film_id " +
+            "FROM FILM_LIKE WHERE user_id in (SELECT user_id FROM FILM_LIKE WHERE film_id in " +
+            "(SELECT film_id from film_like where user_id = ?) and user_id != ? GROUP BY user_id LIMIT 1)) " +
             "and f.film_id not in " +
-            "(SELECT fl4.film_id FROM film_like AS fl4 WHERE fl4.user_id = ?)" );
+            "(SELECT film_id FROM film_like WHERE user_id = ?)" );
 
 
     private final String title;
