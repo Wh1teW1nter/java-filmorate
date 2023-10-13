@@ -108,6 +108,12 @@ public class UserServiceImpl {
     }
 
     @Autowired
+    @Qualifier("recommendationDaoImpl")
+    public void setRecommendationsDao(RecommendationDao recommendationsDao) {
+        this.recommendationsDao = recommendationsDao;
+    }
+
+    @Autowired
     @Qualifier("userDaoImpl")
     public void setUserDao(UserDao userStorage) {
         this.userDao = userStorage;
