@@ -97,4 +97,12 @@ public class UserImplController {
                 "и otherId {} c телом {}", userId, friendId, foundedCommonFriends);
         return foundedCommonFriends;
     }
+
+    @GetMapping("/{id}/feed")
+    public List<String> getUserFeed(@PathVariable("id") @Min(0) Long userId) {
+        log.info("Получен GET-запрос users/{id}/feed с id {} ", userId);
+        List<String> userFeed = userService.getUserFeed(userId);
+        log.info("Отправлен ответ на GET-запрос users/{id}/feed с id {} ", userId);
+        return userFeed;
+    }
 }
