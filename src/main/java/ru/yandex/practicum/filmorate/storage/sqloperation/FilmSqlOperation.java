@@ -46,7 +46,20 @@ public enum FilmSqlOperation {
                     "LEFT JOIN FILM_LIKE AS l ON f.film_id = l.film_id " +
                     "GROUP BY f.film_id " +
                     "ORDER BY COUNT(l.user_id) DESC " +
-                    "LIMIT ?");
+                    "LIMIT ?"),
+
+    GET_COMMON_FILMS(
+            "SELECT f.film_id, f.film_name, f.description, f.release_date, f.duration,r.mpa_id, r.mpa_name  " +
+                    "FROM (SELECT f.* FROM films AS f " +
+                    "INNER JOIN film_like AS l ON f.film_id = l.film_id " +
+                    "WHERE user_id = ?) f " +
+                    "INNER JOIN (SELECT f.* FROM films AS f " +
+                    "INNER JOIN film_like AS l ON f.film_id = l.film_id " +
+                    "WHERE user_id = ?) f2 ON f.film_id = f2.film_id " +
+                    "JOIN rating AS r ON f.mpa_id = r.mpa_id " +
+                    "LEFT JOIN FILM_LIKE AS l ON f.film_id = l.film_id " +
+                    "GROUP BY f.film_id " +
+                    "ORDER BY COUNT(l.user_id) DESC ");
 
     private final String title;
 

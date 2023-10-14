@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.controllers.implcontrollers;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.implservice.FilmServiceImpl;
 
 import javax.validation.Valid;
@@ -86,5 +87,28 @@ public class FilmImplController {
         List<Film> filmsList = filmService.getSortedFilmsByLikes(count);
         log.info("Отправлен ответ на GET-запрос /popular c телом {}", filmsList);
         return filmsList;
+    }
+
+
+/*    @GetMapping("/common?userId={userId}&friendId={friendId}")
+    public List<Film> getCommonFilms(@PathVariable("id") @Min(0) Long userId,
+                                       @PathVariable("otherId") @Min(0) Long friendId) {
+        log.info("Получен GET-запрос films/common?userId={userId}&friendId={friendId} с id {} " +
+                "и otherId {}", userId, friendId);
+        List<Film> foundedCommonFilms = filmService.getCommonFilms(userId, friendId);
+        log.info("Отправлен ответ на GET-запрос users/{id}/friends/common/{otherId} с id {} " +
+                "и otherId {} c телом {}", userId, friendId, foundedCommonFilms);
+        return foundedCommonFilms;
+    }*/
+
+
+    @GetMapping("/common")
+    public List<Film> getCommonFilms(@RequestParam long userId, @RequestParam long friendId) {
+        log.info("Получен GET-запрос films/common?userId={userId}&friendId={friendId} с id {} " +
+                "и otherId {}", userId, friendId);
+        List<Film> foundedCommonFilms = filmService.getCommonFilms(userId, friendId);
+        log.info("Отправлен ответ на GET-запрос users/{id}/friends/common/{otherId} с id {} " +
+                "и otherId {} c телом {}", userId, friendId, foundedCommonFilms);
+        return foundedCommonFilms;
     }
 }

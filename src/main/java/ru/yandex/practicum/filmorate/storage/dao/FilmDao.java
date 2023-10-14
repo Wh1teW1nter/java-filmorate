@@ -24,4 +24,6 @@ public interface FilmDao {
     List<Film> getSortedFilmsByLikes(Long count);
 
     List<Long> getLikesByFilmId(long filmId);
+
+    List<Film> getCommonFilms(long userId, long friendId);
 }

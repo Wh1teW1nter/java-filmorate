@@ -10,6 +10,7 @@ import ru.yandex.practicum.filmorate.exceptions.film.FilmNotExistException;
 import ru.yandex.practicum.filmorate.exceptions.rating.RatingNotFoundException;
 import ru.yandex.practicum.filmorate.exceptions.user.UserNotExistException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.dao.FilmDao;
 import ru.yandex.practicum.filmorate.storage.dao.RatingDao;
 import ru.yandex.practicum.filmorate.storage.dao.UserDao;
@@ -120,6 +121,12 @@ public class FilmServiceImpl {
         } catch (DataAccessException e) {
             throw new RatingNotFoundException("Рейтинг не найден");
         }
+    }
+
+    public List<Film> getCommonFilms(Long userId, Long friendId) {
+        userIdExistsValidation(userId);
+        userIdExistsValidation(friendId);
+        return filmDao.getCommonFilms(userId, friendId);
     }
 
     @Autowired
