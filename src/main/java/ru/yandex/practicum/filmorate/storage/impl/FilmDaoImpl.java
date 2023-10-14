@@ -204,7 +204,7 @@ public class FilmDaoImpl implements FilmDao {
 
     @Override
     public List<Film> getCommonFilms(long userId, long friendId) {
-        List<Film> commonFilm = jdbcTemplate.query(GET_COMMON_FILMS.getTitle(), new FilmMapper(), userId,friendId);
+        List<Film> commonFilm = jdbcTemplate.query(GET_COMMON_FILMS.getTitle(), new FilmMapper(), userId, friendId);
         for (Film film : commonFilm) {
             if (film.getGenres() == null) {
                 film.setGenres(new ArrayList<Genre>());

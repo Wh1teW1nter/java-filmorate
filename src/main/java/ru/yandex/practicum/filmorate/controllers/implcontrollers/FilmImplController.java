@@ -89,19 +89,6 @@ public class FilmImplController {
         return filmsList;
     }
 
-
-/*    @GetMapping("/common?userId={userId}&friendId={friendId}")
-    public List<Film> getCommonFilms(@PathVariable("id") @Min(0) Long userId,
-                                       @PathVariable("otherId") @Min(0) Long friendId) {
-        log.info("Получен GET-запрос films/common?userId={userId}&friendId={friendId} с id {} " +
-                "и otherId {}", userId, friendId);
-        List<Film> foundedCommonFilms = filmService.getCommonFilms(userId, friendId);
-        log.info("Отправлен ответ на GET-запрос users/{id}/friends/common/{otherId} с id {} " +
-                "и otherId {} c телом {}", userId, friendId, foundedCommonFilms);
-        return foundedCommonFilms;
-    }*/
-
-
     @GetMapping("/common")
     public List<Film> getCommonFilms(@RequestParam long userId, @RequestParam long friendId) {
         log.info("Получен GET-запрос films/common?userId={userId}&friendId={friendId} с id {} " +
