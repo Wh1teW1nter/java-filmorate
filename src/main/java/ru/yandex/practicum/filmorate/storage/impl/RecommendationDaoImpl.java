@@ -39,6 +39,7 @@ public class RecommendationDaoImpl implements RecommendationDao {
                 }
             }
         } catch (DataAccessException e) {
+            System.out.println("exception on deleting store - " + e);
             return films;
         }
 
