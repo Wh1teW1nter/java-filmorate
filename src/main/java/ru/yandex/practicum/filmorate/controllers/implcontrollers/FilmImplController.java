@@ -34,9 +34,7 @@ public class FilmImplController {
         log.info("Получен GET-запрос /films/{}", filmId);
         Optional<Film> foundedFilm = filmService.findById(filmId);
         log.info("Отправлен ответ на GET-запрос /films/{} с телом: {}", filmId, foundedFilm);
-
         return foundedFilm.get();
-
     }
 
     @PostMapping
@@ -53,7 +51,6 @@ public class FilmImplController {
         Optional<Film> updatedFilm = filmService.update(film);
         log.info("Отправлен ответ на PUT-запрос /films с телом: {}", updatedFilm);
         return updatedFilm.get();
-        //return filmService.update(film);
     }
 
     @DeleteMapping("/{filmId}")
@@ -61,6 +58,13 @@ public class FilmImplController {
         log.info("Получен DELETE-запрос /films/{}", filmId);
         log.info("Отправлен ответ на PUT-запрос /films/{}", filmId);
         filmService.delete(filmId);
+    }
+
+    @GetMapping("/director/{directorId}")
+    public List<Film> getSortedDirectorFilms(@PathVariable Long directorId,
+                                             @RequestParam(defaultValue = "year") String sortBy) {
+        log.info("Получен GET-запрос /director/{}/?sortBy={}", directorId, sortBy);
+        return filmService.getSortedDirectorFilms(directorId, sortBy);
     }
 
     @PutMapping("/{id}/like/{userId}")
