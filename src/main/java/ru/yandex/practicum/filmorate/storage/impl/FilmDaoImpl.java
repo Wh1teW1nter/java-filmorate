@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.storage.impl;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
@@ -132,6 +131,24 @@ public class FilmDaoImpl implements FilmDao {
     @Override
     public List<Long> getLikesByFilmId(long filmId) {
         return jdbcTemplate.queryForList(GET_USER_LIKES_BY_FILM_ID.getTitle(), Long.class, filmId);
+    }
+
+    @Override
+    public List<Film> searchFilmsByDirector(String director) {
+        List<Film> foundedFilms = jdbcTemplate.query(SEARCH_FILM_BY_DIRECTOR.getTitle(), new FilmMapper(), "%" + director + "%");
+        return addGenreAndDirectorToFilms(foundedFilms);
+    }
+
+    @Override
+    public List<Film> searchFilmsByTitle(String title) {
+        List<Film> foundedFilms = jdbcTemplate.query(SEARCH_FILM_BY_TITLE.getTitle(), new FilmMapper(), "%" + title + "%");
+        return addGenreAndDirectorToFilms(foundedFilms);
+    }
+
+    @Override
+    public List<Film> searchFilmsByDirectorAndTitle(String query) {
+        List<Film> foundedFilms = jdbcTemplate.query(SEARCH_FILM_BY_DIRECTOR_AND_TITLE.getTitle(), new FilmMapper(), "%" + query + "%", "%" + query + "%");
+        return addGenreAndDirectorToFilms(foundedFilms);
     }
 
     private Optional<Film> getValidFilmByFilmId(Long filmId) {
