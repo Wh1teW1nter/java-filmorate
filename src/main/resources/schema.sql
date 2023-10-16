@@ -13,8 +13,6 @@ create table if not exists genre
 );
 
 
-
-
 drop table if exists users cascade;
 create table if not exists users
 (
@@ -73,3 +71,55 @@ create table if not exists film_like
     FOREIGN KEY(film_id) REFERENCES films(film_id) ON DELETE CASCADE,
     FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
+
+drop table if exists reviews cascade;
+CREATE TABLE if not exists reviews (
+   review_id INTEGER not null primary key auto_increment,
+   content varchar(255) NOT NULL,
+   is_positive BOOLEAN NOT NULL,
+   user_id INTEGER NOT NULL,
+   film_id INTEGER NOT NULL,
+   useful INTEGER DEFAULT 0
+);
+drop sequence if exists review_sequence;
+create sequence if not exists review_sequence START with 1 minvalue 1 increment by 1;
+
+drop table if exists review_like cascade;
+-- create table if not exists review_like
+-- (
+--     user_id INTEGER NOT NULL,
+--     review_id INTEGER NOT NULL,
+--     PRIMARY KEY(review_id, user_id),
+--     FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+--     FOREIGN KEY(review_id) REFERENCES reviews(review_id) ON DELETE CASCADE
+-- );
+
+-- drop table if exists review_dislike cascade;
+-- create table if not exists review_dislike
+-- (
+--     user_id INTEGER NOT NULL,
+--     review_id INTEGER NOT NULL,
+--     PRIMARY KEY(review_id, user_id),
+--     FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+--     FOREIGN KEY(review_id) REFERENCES reviews(review_id) ON DELETE CASCADE
+-- );
+
+drop table if exists review_dislike cascade;
+CREATE TABLE IF NOT EXISTS `review_dislike` (
+    `review_id` integer NOT NULL,
+    `user_id` integer NOT NULL
+);
+
+ALTER TABLE `review_dislike` ADD FOREIGN KEY (`review_id`) REFERENCES `reviews` (`review_id`);
+
+ALTER TABLE `review_dislike` ADD FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
+
+drop table if exists review_like cascade;
+CREATE TABLE IF NOT EXISTS `review_like` (
+    `review_id` integer NOT NULL,
+    `user_id` integer NOT NULL
+);
+
+ALTER TABLE `review_like` ADD FOREIGN KEY (`review_id`) REFERENCES `reviews` (`review_id`);
+
+ALTER TABLE `review_like` ADD FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
