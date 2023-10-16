@@ -10,74 +10,62 @@ import org.springframework.stereotype.Repository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.yandex.practicum.filmorate.exceptions.event.ObjectNotFoundException;
+import ru.yandex.practicum.filmorate.mapper.EventMapper;
 import ru.yandex.practicum.filmorate.model.Event;
 import ru.yandex.practicum.filmorate.storage.dao.EventDao;
 
-/**
- * реализация сохранения и получения информации о событиях в базе данных
- */
+import static ru.yandex.practicum.filmorate.storage.sqloperation.EventSqlOperation.*;
+
+
 @Slf4j
 @Repository
 @RequiredArgsConstructor
 public class EventDaoImpl implements EventDao {
 
+    private final EventMapper eventMapper;
     private final JdbcTemplate jdbcTemplate;
+
 
     @Override
     public List<Event> listEvents(Long id) {
-        // запрашиваем список всех событий пользователя
-        String sqlEvents = "SELECT * FROM events where user_id = " + id;
+        List<Event> events = jdbcTemplate.query(GET_USER_EVENT.getTitle(), eventMapper, id);
 
-        // обрабатываем запрос и возвращаем список объектов пользователей
-        return jdbcTemplate.query(sqlEvents,
-                (rs, rowNum) -> Event.builder().eventId(rs.getLong("event_id")).userId(rs.getLong("user_id"))
-                        .entityId(rs.getLong("entity_id"))
-                        .eventType(Event.EventType.fromName(rs.getString("event_type")))
-                        .operation(Event.OperationType.fromName(rs.getString("operation_type")))
-                        .timestamp(rs.getLong("time_stamp")).build());
+        return events;
     }
 
     @Override
     public Event addEvent(Long userId, Long entityId, String eventType, String operationType) {
-        // вставляем данные события в базу данных и получаем сгенерированный id
-
         SimpleJdbcInsert eventInsertion = new SimpleJdbcInsert(jdbcTemplate).withTableName("events")
                 .usingGeneratedKeyColumns("event_id");
 
-        Event event = Event.builder().userId(userId).entityId(entityId).eventType(Event.EventType.fromName(eventType))
-                .operation(Event.OperationType.fromName(operationType)).timestamp(System.currentTimeMillis()).build();
+        Event event = Event.builder()
+                .userId(userId)
+                .entityId(entityId)
+                .eventType(Event.EventType.fromName(eventType))
+                .operation(Event.OperationType.fromName(operationType))
+                .timestamp(System.currentTimeMillis())
+                .build();
 
         Long eventId = eventInsertion.executeAndReturnKey(event.toMap()).longValue();
-
-        // возвращаем данные события с присвоенным id
         Event newEvent = getEvent(eventId);
-
-        log.info("Создано событие: {} ", newEvent);
 
         return newEvent;
     }
 
     @Override
     public Event getEvent(Long id) {
-        // выполняем запрос к базе данных
-        SqlRowSet rs = jdbcTemplate.queryForRowSet("SELECT * FROM events WHERE event_id = ?", id);
-        Event event;
-        // создание объекта события из таблиц, включающих данные о событиях
-        if (rs.next()) {
-            event = Event.builder().eventId(rs.getLong("event_id")).userId(rs.getLong("user_id"))
-                    .entityId(rs.getLong("entity_id")).eventType(Event.EventType.fromName(rs.getString("event_type")))
-                    .operation(Event.OperationType.fromName(rs.getString("operation_type")))
-                    .timestamp(rs.getLong("time_stamp")).build();
-        } else {
-
-            // сообщение об ошибке и выброс исключения при остутствии пользователя в базе
-            // данных
-            log.info("Событие с идентификатором {} не найден.", id);
-            throw new ObjectNotFoundException(String.format("Событие с id: %d не найден", id));
-
-        }
-
-        log.info("Найдено событие: {} ", id);
+        checkEventId(id);
+        Event event = jdbcTemplate.queryForObject(GET_USER_EVENT.getTitle(), eventMapper, id);
         return event;
+    }
+
+    public void checkEventId(Long eventId) {
+
+        SqlRowSet sqlId = jdbcTemplate
+                .queryForRowSet(GET_EVENT_BY_ID.getTitle(), eventId);
+
+        if (!sqlId.next()) {
+            throw new ObjectNotFoundException(String.format("Событие с id: %d не найдено", eventId));
+        }
     }
 }

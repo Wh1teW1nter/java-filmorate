@@ -16,7 +16,7 @@ import java.util.Map;
 @Validated
 @Data
 @Builder
-public class Event implements Comparable<Event>{
+public class Event implements Comparable<Event> {
     Long eventId; // id события
 
     @NotBlank
@@ -45,10 +45,15 @@ public class Event implements Comparable<Event>{
         values.put("user_id", userId);
         values.put("entity_id", entityId);
         values.put("event_type", eventType.getName());
-        values.put("operatiom_type", operation.getName());
+        values.put("operation-type", operation.getName());
         values.put("time_stamp", timestamp);
 
         return values;
+    }
+
+    @Override
+    public int compareTo(Event otherEvent) {
+        return this.getTimestamp().compareTo(otherEvent.getTimestamp());
     }
 
 
@@ -64,9 +69,9 @@ public class Event implements Comparable<Event>{
         }
 
         @JsonCreator
-        public static EventType fromName (String name) {
+        public static EventType fromName(String name) {
             if (name == null) {
-                return null;
+                throw new UnsupportedOperationException(String.format("Не указан тип события"));
             }
 
             switch (name) {
@@ -87,6 +92,7 @@ public class Event implements Comparable<Event>{
                 }
             }
         }
+
         @JsonValue
         public String getName() {
             return name;
@@ -104,9 +110,9 @@ public class Event implements Comparable<Event>{
         }
 
         @JsonCreator
-        public static OperationType fromName (String name) {
+        public static OperationType fromName(String name) {
             if (name == null) {
-                return null;
+                throw new UnsupportedOperationException(String.format("Не указан тип операции"));
             }
 
             switch (name) {
@@ -127,14 +133,10 @@ public class Event implements Comparable<Event>{
                 }
             }
         }
+
         @JsonValue
         public String getName() {
             return name;
         }
-    }
-
-    @Override
-    public int compareTo(Event otherEvent) {
-        return this.getTimestamp().compareTo(otherEvent.getTimestamp());
     }
 }
