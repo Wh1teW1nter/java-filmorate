@@ -28,7 +28,6 @@ public enum DirectorSqlOperation {
             "WHERE film_id = ?");
 
 
-
     private final String title;
 
     DirectorSqlOperation(String title) {
