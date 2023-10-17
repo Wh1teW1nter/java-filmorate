@@ -39,6 +39,21 @@ public enum FilmSqlOperation {
     DELETE_LIKE(
             "DELETE FROM film_like " +
                     "WHERE film_id = ? AND user_id = ?"),
+
+    GET_DIRECTOR_FILMS_SORTED_BY_YEAR("SELECT f.*, r.mpa_name FROM FILMS f " +
+            "LEFT JOIN rating r ON f.mpa_id = r.mpa_id " +
+            "LEFT JOIN director_films df ON f.film_id = df.film_id " +
+            "LEFT JOIN director d ON df.director_id = d.id " + " WHERE d.id = ? " +
+            "ORDER BY EXTRACT(YEAR FROM CAST(release_date AS date))"),
+
+    GET_DIRECTOR_FILMS_SORTED_BY_LIKES("SELECT f.*, r.mpa_name FROM FILMS f " +
+            "LEFT JOIN rating r ON f.mpa_id = r.mpa_id " +
+            "LEFT JOIN director_films df ON f.film_id = df.film_id " +
+            "LEFT JOIN director d ON df.director_id = d.id " +
+            "LEFT JOIN film_like fl ON f.film_id = fl.film_id " +
+            "WHERE d.id = ? GROUP BY f.film_id " +
+            "ORDER BY COUNT(fl.user_id) DESC"),
+
     GET_MOST_POPULAR_FILMS(
             "SELECT f.film_id, f.film_name, f.description, f.release_date, f.duration,r.mpa_id, r.mpa_name " +
                     "FROM films AS f " +

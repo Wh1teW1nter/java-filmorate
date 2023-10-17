@@ -17,6 +17,8 @@ public interface FilmDao {
 
     Optional<Film> getFilmById(Long id);
 
+    List<Film> getSortedDirectorFilms(Long directorId, String sortBy);
+
     void addLike(long filmId, long userId);
 
     void deleteLike(long filmId, long userId);
