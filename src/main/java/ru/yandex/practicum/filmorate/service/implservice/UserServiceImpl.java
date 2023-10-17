@@ -98,7 +98,7 @@ public class UserServiceImpl {
         }
     }
 
-    public List<String> getUserFeed(long userId){
+    public List<String> getUserFeed(long userId) {
         List<String> userFeed = new ArrayList<>();
         return userFeed;
     }

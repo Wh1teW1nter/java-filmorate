@@ -64,7 +64,7 @@ public class ReviewDaoImpl implements ReviewDao {
     private void userIdExistsValidation(Long userId) {
         if (userId != null) {
             userDao.getUserById(userId).isEmpty();
-        }else{
+        } else {
             throw new UserNotExistException("Вместо id пользователя передано значение NULL. ");
         }
     }
@@ -74,7 +74,7 @@ public class ReviewDaoImpl implements ReviewDao {
             if (filmDao.getFilmById(filmId).isEmpty()) {
                 throw new FilmNotExistException("Фильм с id: " + filmId + " не найден");
             }
-        }else{
+        } else {
             throw new FilmNotFoundException("Вместо id фильма передано значение NULL. ");
         }
     }
@@ -98,7 +98,7 @@ public class ReviewDaoImpl implements ReviewDao {
     @Override
     public void delete(Long id) {
         jdbcTemplate.update(DELETE_REVIEW_DISLIKES.getTitle(), id);
-        jdbcTemplate.update(DELETE_REVIEW.getTitle(),id);
+        jdbcTemplate.update(DELETE_REVIEW.getTitle(), id);
     }
 
     @Override
@@ -125,14 +125,14 @@ public class ReviewDaoImpl implements ReviewDao {
 
     @Override
     public void addLikeReview(Long reviewId, Long userId) {
-        if(!IsLike(reviewId, userId)) {
+        if (!IsLike(reviewId, userId)) {
             jdbcTemplate.update(CREATE_LIKE.getTitle(), reviewId, userId);
 //            Если есть дизлайк то прибавляем два оценке(одно из-за дизлайка, второй добавление лайка) и удаляем из
 //            таблицы "review_dislike" запись с дизлайком. в противном случае просто прибавляем к рейтингу один
             if (IsDislike(reviewId, userId)) {
                 jdbcTemplate.update(ADD_TWO_USEFUL.getTitle(), reviewId);
                 jdbcTemplate.update(DELETE_DISLIKE.getTitle(), reviewId, userId);
-            }else {
+            } else {
                 jdbcTemplate.update(ADD_ONE_USEFUL.getTitle(), reviewId);
             }
         }
@@ -140,7 +140,7 @@ public class ReviewDaoImpl implements ReviewDao {
 
     @Override
     public void deleteLikeReview(Long reviewId, Long userId) {
-        if(IsLike(reviewId, userId)){
+        if (IsLike(reviewId, userId)) {
             jdbcTemplate.update(DELETE_LIKE.getTitle(), reviewId, userId);
             jdbcTemplate.update(ADD_ONE_USEFUL.getTitle(), reviewId);
         }
@@ -148,7 +148,7 @@ public class ReviewDaoImpl implements ReviewDao {
 
     @Override
     public void addDislikeReview(Long reviewId, Long userId) {
-        if(!IsDislike(reviewId, userId)) {
+        if (!IsDislike(reviewId, userId)) {
             jdbcTemplate.update(CREATE_DISLIKE.getTitle(), reviewId, userId);
 //            Если есть лайк то вычитаем два от оценки(одно из-за лайка, второй вычитание дизлайка) и удаляем из
 //            таблицы "review_like" запись с лайком. в противном случае просто отнимаем от рейтинга один
@@ -163,7 +163,7 @@ public class ReviewDaoImpl implements ReviewDao {
 
     @Override
     public void deleteDislikeReview(Long reviewId, Long userId) {
-        if(IsDislike(reviewId, userId)) {
+        if (IsDislike(reviewId, userId)) {
             jdbcTemplate.update(DELETE_DISLIKE.getTitle(), reviewId, userId);
             jdbcTemplate.update(ADD_ONE_USEFUL.getTitle(), reviewId);
         }
@@ -173,23 +173,23 @@ public class ReviewDaoImpl implements ReviewDao {
         return 1 == jdbcTemplate.queryForObject(IS_LIKE.getTitle(), Integer.class, reviewId, userId);
     }
 
-    private boolean IsDislike(Long reviewId, Long userId){
+    private boolean IsDislike(Long reviewId, Long userId) {
         return 1 == jdbcTemplate.queryForObject(IS_DISLIKE.getTitle(), Integer.class, reviewId, userId);
     }
 
     @Override
     public List<Review> getReviewsByFilmIdLimited(Long filmId, Integer count) {
-        return jdbcTemplate.query(GET_SORT_REVIEW_BY_FILM_ID_WITH_COUNT.getTitle(), new ReviewMapper(),filmId,count);
+        return jdbcTemplate.query(GET_SORT_REVIEW_BY_FILM_ID_WITH_COUNT.getTitle(), new ReviewMapper(), filmId, count);
     }
 
     @Override
     public List<Review> getReviewsByFilmId(Long filmId) {
-        return jdbcTemplate.query(GET_SORT_REVIEW_BY_FILM_ID.getTitle(), new ReviewMapper(),filmId);
+        return jdbcTemplate.query(GET_SORT_REVIEW_BY_FILM_ID.getTitle(), new ReviewMapper(), filmId);
     }
 
     @Override
     public List<Review> getLimitedReviews(Integer count) {
-        return jdbcTemplate.query(GET_SORT_REVIEW_WITH_COUNT.getTitle(), new ReviewMapper(),count);
+        return jdbcTemplate.query(GET_SORT_REVIEW_WITH_COUNT.getTitle(), new ReviewMapper(), count);
     }
 
     @Override

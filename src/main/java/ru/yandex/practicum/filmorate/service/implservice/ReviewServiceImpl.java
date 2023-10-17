@@ -38,7 +38,7 @@ public class ReviewServiceImpl {
 
 
     public void addLikeReview(Long reviewId, Long userId) {
-        reviewDao.addLikeReview(reviewId,userId);
+        reviewDao.addLikeReview(reviewId, userId);
     }
 
     public void deleteLikeReview(Long reviewId, Long userId) {
@@ -54,7 +54,7 @@ public class ReviewServiceImpl {
     }
 
     public List<Review> getReviewsByFilmIdLimited(Long filmId, Integer count) {
-        return reviewDao.getReviewsByFilmIdLimited(filmId,count);
+        return reviewDao.getReviewsByFilmIdLimited(filmId, count);
     }
 
     public List<Review> getReviewsByFilmId(Long filmId) {

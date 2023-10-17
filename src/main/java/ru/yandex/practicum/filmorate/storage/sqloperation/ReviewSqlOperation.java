@@ -8,7 +8,7 @@ public enum ReviewSqlOperation {
     UPDATE_REVIEW(
             "UPDATE reviews " +
                     "SET content = ?, " +
-                        "is_positive = ? " +
+                    "is_positive = ? " +
 //                        "user_id = ?, " +
 //                        "film_id = ?," +
 //                        "useful = ? " +

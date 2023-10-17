@@ -11,7 +11,7 @@ import ru.yandex.practicum.filmorate.storage.dao.EventDao;
 
 @Service
 @RequiredArgsConstructor
-public class EventServiceImpl{
+public class EventServiceImpl {
 
     private final EventDao eventDao;
     private final UserServiceImpl userService;
