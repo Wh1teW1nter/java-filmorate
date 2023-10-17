@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exceptions.film.FilmNotExistException;
 import ru.yandex.practicum.filmorate.exceptions.film.FilmorateAlreadyExistsException;
 import ru.yandex.practicum.filmorate.mapper.FilmMapper;
+import ru.yandex.practicum.filmorate.mapper.GenreMapper;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.storage.dao.FilmDao;
@@ -212,4 +213,19 @@ public class FilmDaoImpl implements FilmDao {
         }
         return commonFilm;
     }
+
+    @Override
+    public List<Film> getPopularFilms(long genreId, int year, int count) {
+        List<Film> popularFilm = jdbcTemplate.query(GET_POPULAR_FILMS.getTitle(),
+                new FilmMapper(),year, year, genreId, genreId, count);
+        for (Film film : popularFilm) {
+            List<Genre> genres = jdbcTemplate.query(GET_FILMS_GENRES.getTitle(), new GenreMapper(),film.getId());
+            film.setGenres(genres);
+            if (film.getGenres() == null) {
+                film.setGenres(new ArrayList<Genre>());
+            }
+        }
+        return popularFilm;
+    }
+
 }

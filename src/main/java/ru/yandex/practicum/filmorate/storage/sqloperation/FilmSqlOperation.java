@@ -59,8 +59,30 @@ public enum FilmSqlOperation {
                     "JOIN rating AS r ON f.mpa_id = r.mpa_id " +
                     "LEFT JOIN FILM_LIKE AS l ON f.film_id = l.film_id " +
                     "GROUP BY f.film_id " +
-                    "ORDER BY COUNT(l.user_id) DESC ");
+                    "ORDER BY COUNT(l.user_id) DESC "),
 
+    GET_POPULAR_FILMS(
+            "SELECT distinct * from (SELECT  f.film_id, f.film_name, f.description, f.release_date, f.duration,r.mpa_id, r.mpa_name " +
+                    "FROM films AS f " +
+                    "JOIN rating AS r ON f.mpa_id = r.mpa_id " +
+                    "LEFT JOIN FILM_LIKE AS l ON f.film_id = l.film_id " +
+                    "LEFT JOIN FILM_GENRE fg ON f.film_id = fg.film_id " +
+                    "WHERE CASE WHEN ? <> '-1' " +
+                    "THEN (year(release_date) = ?) " +
+                    "ELSE (year(release_date) IS NOT NULL ) " +
+                    "END " +
+                    "AND " +
+                    "CASE when ? <> '-1' " +
+                    "THEN (fg.genre_id = ?) " +
+                    "ELSE (fg.genre_id IS NOT NULL OR fg.genre_id IS NULL ) " +
+                    "END " +
+                    "GROUP BY f.film_id,fg.genre_id " +
+                    "ORDER BY COUNT(l.user_id) DESC " +
+                    "LIMIT ?)"),
+    GET_FILMS_GENRES(
+            "SELECT  g.* FROM FILM_GENRE fg " +
+                    "INNER JOIN GENRE AS g ON fg.genre_id = g.genre_id " +
+                    "WHERE fg.FILM_ID = ?");
     private final String title;
 
     FilmSqlOperation(String title) {

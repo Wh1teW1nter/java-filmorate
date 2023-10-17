@@ -128,6 +128,10 @@ public class FilmServiceImpl {
         return filmDao.getCommonFilms(userId, friendId);
     }
 
+    public List<Film> getPopularFilms(Long genereId, int year, int count) {
+        return filmDao.getPopularFilms(genereId, year, count);
+    }
+
     @Autowired
     @Qualifier("filmDaoImpl")
     public void setFilmDao(FilmDao filmDao) {

@@ -79,15 +79,6 @@ public class FilmImplController {
         filmService.deleteLike(filmId, userId);
     }
 
-    @GetMapping("/popular")
-    public List<Film> getSortedFilmsByLikes(@RequestParam(value = "count", required = false, defaultValue = "10")
-                                            @Min(1) Long count) {
-        log.info("Получен GET-запрос /popular?count={}", count);
-        List<Film> filmsList = filmService.getSortedFilmsByLikes(count);
-        log.info("Отправлен ответ на GET-запрос /popular c телом {}", filmsList);
-        return filmsList;
-    }
-
     @GetMapping("/common")
     public List<Film> getCommonFilms(@RequestParam long userId, @RequestParam long friendId) {
         log.info("Получен GET-запрос films/common?userId={userId}&friendId={friendId} с id {} " +
@@ -96,5 +87,17 @@ public class FilmImplController {
         log.info("Отправлен ответ на GET-запрос users/{id}/friends/common/{otherId} с id {} " +
                 "и otherId {} c телом {}", userId, friendId, foundedCommonFilms);
         return foundedCommonFilms;
+    }
+
+    @GetMapping("/popular")
+    public List<Film> getPopularFilms(@RequestParam(value = "count", required = false, defaultValue = "10") int count,
+                                      @RequestParam(value = "genreId", required = false, defaultValue = "-1") Long genreId,
+                                      @RequestParam(value = "year", required = false, defaultValue = "-1") Integer year) {
+        log.info("Получен GET-запрос  /films/popular?count={limit}&genreId={genreId}&year={year} с genreId {} " +
+                " year {} и count {}", genreId, year, count);
+        List<Film> foundedPopularFilms = filmService.getPopularFilms(genreId, year, count);
+        log.info("Отправлен ответ на GET-запрос  /films/popular?count={limit}&genreId={genreId}&year={year} " +
+                "с genreId {} year {} и count {} c телом {}", genreId, year, count, foundedPopularFilms);
+        return foundedPopularFilms;
     }
 }
