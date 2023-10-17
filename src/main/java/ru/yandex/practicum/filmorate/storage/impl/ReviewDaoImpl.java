@@ -5,28 +5,21 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exceptions.film.FilmNotExistException;
 import ru.yandex.practicum.filmorate.exceptions.film.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.exceptions.review.ReviewNotFoundException;
 import ru.yandex.practicum.filmorate.exceptions.user.UserNotExistException;
-import ru.yandex.practicum.filmorate.exceptions.user.UserNotFoundException;
 import ru.yandex.practicum.filmorate.mapper.ReviewMapper;
-import ru.yandex.practicum.filmorate.mapper.UserMapper;
 import ru.yandex.practicum.filmorate.model.Review;
-import ru.yandex.practicum.filmorate.service.implservice.FilmServiceImpl;
-import ru.yandex.practicum.filmorate.service.implservice.UserServiceImpl;
 import ru.yandex.practicum.filmorate.storage.dao.FilmDao;
 import ru.yandex.practicum.filmorate.storage.dao.ReviewDao;
 import ru.yandex.practicum.filmorate.storage.dao.UserDao;
 
-import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
 import static ru.yandex.practicum.filmorate.storage.sqloperation.ReviewSqlOperation.*;
-import static ru.yandex.practicum.filmorate.storage.sqloperation.UserSqlOperation.GET_ALL_USERS;
 
 @Repository
 public class ReviewDaoImpl implements ReviewDao {
