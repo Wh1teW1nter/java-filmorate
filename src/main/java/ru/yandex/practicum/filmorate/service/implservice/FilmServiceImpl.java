@@ -161,7 +161,7 @@ public class FilmServiceImpl {
     }
 
     @Autowired
-    public void setDirectorDao(DirectorDao directorDao){
+    public void setDirectorDao(DirectorDao directorDao) {
         this.directorDao = directorDao;
     }
 }
