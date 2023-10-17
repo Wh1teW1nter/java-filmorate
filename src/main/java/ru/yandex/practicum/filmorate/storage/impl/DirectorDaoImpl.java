@@ -53,7 +53,7 @@ public class DirectorDaoImpl implements DirectorDao {
 
     @Override
     public List<Director> getDirectorByFilmId(Long filmId) {
-        if(jdbcTemplate.queryForList(GET_DIRECTOR_BY_FILM_ID.getTitle(), filmId).isEmpty()) {
+        if (jdbcTemplate.queryForList(GET_DIRECTOR_BY_FILM_ID.getTitle(), filmId).isEmpty()) {
             return List.of();
         }
         return jdbcTemplate.query(GET_DIRECTOR_BY_FILM_ID.getTitle(), new DirectorMapper(), filmId);
