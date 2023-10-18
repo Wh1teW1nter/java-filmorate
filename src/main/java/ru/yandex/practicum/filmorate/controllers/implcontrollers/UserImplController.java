@@ -71,9 +71,9 @@ public class UserImplController {
     public void addFriend(@PathVariable("id") @Min(0) Long userId,
                           @PathVariable("friendId") @Min(0) Long friendId) {
         log.info("Получен PUT-запрос /users/{}/friends/{}", userId, friendId);
+        userService.addFriend(userId, friendId);
         log.info("Отправлен ответ на PUT-запрос /users/{}/friends/{}", userId, friendId);
         eventService.addEvent(userId, friendId, "FRIEND", "ADD");
-        userService.addFriend(userId, friendId);
     }
 
     @DeleteMapping("/{id}/friends/{friendId}")

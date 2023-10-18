@@ -70,9 +70,9 @@ public class FilmImplController {
     public void addLike(@PathVariable("id") @Min(0) Long filmId,
                         @PathVariable("userId") @Min(0) Long userId) {
         log.info("Получен PUT-запрос /films/{}/like/{}", filmId, userId);
-        log.info("Отправлен ответ на PUT-запрос /films/{}/like/{}", filmId, userId);
         filmService.addLike(filmId, userId);
-        eventService.addEvent(userId, Long.valueOf(filmId), "LIKE", "ADD");
+        log.info("Отправлен ответ на PUT-запрос /films/{}/like/{}", filmId, userId);
+        eventService.addEvent(userId, filmId, "LIKE", "ADD");
 
     }
 
@@ -80,9 +80,9 @@ public class FilmImplController {
     public void deleteLike(@PathVariable("id") @Min(0) Long filmId,
                            @PathVariable("userId") @Min(0) Long userId) {
         log.info("Получен DELETE-запрос /films/{}/like/{}", filmId, userId);
-        log.info("Отправлен ответ на DELETE-запрос /films/{}/like/{}", filmId, userId);
         filmService.deleteLike(filmId, userId);
-        eventService.addEvent(userId, Long.valueOf(filmId), "LIKE", "REMOVE");
+        log.info("Отправлен ответ на DELETE-запрос /films/{}/like/{}", filmId, userId);
+        eventService.addEvent(userId, filmId, "LIKE", "REMOVE");
 
     }
 

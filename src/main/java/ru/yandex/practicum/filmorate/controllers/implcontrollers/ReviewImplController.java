@@ -44,19 +44,19 @@ public class ReviewImplController {
 
     @DeleteMapping("/{reviewId}")
     public void delete(@PathVariable("reviewId") @Min(0) Long reviewId) {
-        eventService.addEvent(this.findById(reviewId).get().getUserId(), Long.valueOf(reviewId), "REVIEW", "REMOVE");
+        eventService.addEvent(reviewService.findById(reviewId).get().getUserId(), Long.valueOf(reviewId), "REVIEW", "REMOVE");
         log.info("Получен DELETE-запрос /reviews/{}", reviewId);
         reviewService.delete(reviewId);
         log.info("Отправлен ответ на DELETE-запрос /reviews/{}", reviewId);
     }
 
-//    @GetMapping
-//    public List<Review> findAll() {
-//        log.info("Получен GET-запрос /reviews");
-//        List<Review> foundedReviews = reviewService.findAll();
-//        log.info("Отправлен ответ на GET-запрос /reviews с телом: {}", foundedReviews);
-//        return foundedReviews;
-//    }
+    /*@GetMapping
+    public List<Review> findAll() {
+        log.info("Получен GET-запрос /reviews");
+        List<Review> foundedReviews = reviewService.findAll();
+        log.info("Отправлен ответ на GET-запрос /reviews с телом: {}", foundedReviews);
+        return foundedReviews;
+    }*/
 
     @GetMapping("/{reviewId}")
     public Optional<Review> findById(@PathVariable("reviewId") @Min(0) Long reviewId) {

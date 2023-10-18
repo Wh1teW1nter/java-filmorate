@@ -1,6 +1,8 @@
 package ru.yandex.practicum.filmorate.storage.impl;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -27,12 +29,21 @@ public class EventDaoImpl implements EventDao {
 
     @Override
     public List<Event> getUserFeed(Long id) {
-        List<Event> events = jdbcTemplate.query(GET_USER_EVENT.getTitle(), eventMapper, id);
+        String sqlEvents = "SELECT * FROM events where user_id = ?";
+        List<Event> events = jdbcTemplate.query(sqlEvents, eventMapper, id);
+
+        String result = events.stream()
+                .map(Event::toString)
+                .collect(Collectors.joining(", "));
+
+        log.info("Список событий по запросу: {}", result);
+
         return events;
     }
 
     @Override
     public Event addEvent(Long userId, Long entityId, String eventType, String operationType) {
+
         SimpleJdbcInsert eventInsertion = new SimpleJdbcInsert(jdbcTemplate).withTableName("events")
                 .usingGeneratedKeyColumns("event_id");
 
@@ -45,7 +56,10 @@ public class EventDaoImpl implements EventDao {
                 .build();
 
         Long eventId = eventInsertion.executeAndReturnKey(event.toMap()).longValue();
+
         Event newEvent = getEvent(eventId);
+
+        log.info("Создано событие: {} ", newEvent);
 
         return newEvent;
     }
@@ -53,16 +67,17 @@ public class EventDaoImpl implements EventDao {
     @Override
     public Event getEvent(Long id) {
         checkEventId(id);
-        Event event = jdbcTemplate.queryForObject(GET_USER_EVENT.getTitle(), eventMapper, id);
+        String sqlEvent = "SELECT * FROM events WHERE event_id = ?";
+        Event event = jdbcTemplate.queryForObject(sqlEvent, eventMapper, id);
+        log.info("Найдено событие: {} ", id);
         return event;
     }
 
     public void checkEventId(Long eventId) {
-
         SqlRowSet sqlId = jdbcTemplate
-                .queryForRowSet(GET_EVENT_BY_ID.getTitle(), eventId);
-
+                .queryForRowSet("SELECT event_id FROM events WHERE event_id = ?", eventId);
         if (!sqlId.next()) {
+            log.info("Событие с идентификатором {} не найдено.", eventId);
             throw new ObjectNotFoundException(String.format("Событие с id: %d не найдено", eventId));
         }
     }
