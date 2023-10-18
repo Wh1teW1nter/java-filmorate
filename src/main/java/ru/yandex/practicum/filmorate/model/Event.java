@@ -17,61 +17,62 @@ import java.util.Map;
 @Data
 @Builder
 public class Event implements Comparable<Event> {
-    Long eventId; // id события
+    Long eventId;
 
+    @NotNull
     @NotBlank
-    @NotNull
     @NotEmpty
-    Long userId; // id пользователя
+    Long userId;
 
+    @NotNull
     @NotBlank
-    @NotNull
     @NotEmpty
-    Long entityId; // идентификатор сущности, с которой произошло событие
+    Long entityId;
 
     @NotNull
-    EventType eventType; // тип события
+    EventType eventType;
 
     @NotNull
-    OperationType operation; // тип операции
+    OperationType operation;
 
     @PastOrPresent
-    Long timestamp; // дата и время события
+    Long timestamp;
 
     public Map<String, Object> toMap() {
-        Map<String, Object> values = new HashMap<>();
 
-        values.put("event_id", eventId);
-        values.put("user_id", userId);
-        values.put("entity_id", entityId);
-        values.put("event_type", eventType.getName());
-        values.put("operation-type", operation.getName());
-        values.put("time_stamp", timestamp);
+        Map<String, Object> eventProperties = new HashMap<>();
 
-        return values;
+        eventProperties.put("event_id", eventId);
+        eventProperties.put("user_id", userId);
+        eventProperties.put("entity_id", entityId);
+        eventProperties.put("event_type", eventType.getName());
+        eventProperties.put("operation_type", operation.getName());
+        eventProperties.put("time_stamp", timestamp);
+
+        return eventProperties;
     }
 
-    @Override
-    public int compareTo(Event otherEvent) {
-        return this.getTimestamp().compareTo(otherEvent.getTimestamp());
-    }
-
-
-    public enum EventType { // Типы событий
+    public enum EventType {
         FRIEND("FRIEND"),
         LIKE("LIKE"),
         REVIEW("REVIEW");
 
-        private String name;
+        private final String name;
 
-        EventType(String name) { // Получение строкового значениея из типа операции
+        EventType(String name) {
             this.name = name;
+        }
+
+        @JsonValue
+        public String getName() {
+            return name;
         }
 
         @JsonCreator
         public static EventType fromName(String name) {
+
             if (name == null) {
-                throw new UnsupportedOperationException(String.format("Не указан тип события"));
+                return null;
             }
 
             switch (name) {
@@ -92,27 +93,27 @@ public class Event implements Comparable<Event> {
                 }
             }
         }
+    }
+
+    public enum OperationType {
+        ADD("ADD"), UPDATE("UPDATE"), REMOVE("REMOVE");
+
+        private final String name;
+
+        OperationType(String name) {
+            this.name = name;
+        }
 
         @JsonValue
         public String getName() {
             return name;
         }
-    }
-
-    public enum OperationType {
-        ADD("ADD"),
-        UPDATE("UPDATE"),
-        REMOVE("REMOVE");
-        private String name;
-
-        OperationType(String name) { // Получение строкового значениея из типа операции
-            this.name = name;
-        }
 
         @JsonCreator
         public static OperationType fromName(String name) {
+
             if (name == null) {
-                throw new UnsupportedOperationException(String.format("Не указан тип операции"));
+                return null;
             }
 
             switch (name) {
@@ -127,16 +128,15 @@ public class Event implements Comparable<Event> {
                 case "REMOVE": {
                     return REMOVE;
                 }
-
                 default: {
-                    throw new UnsupportedOperationException(String.format("Неизвестный тип события: '%s'", name));
+                    throw new UnsupportedOperationException(String.format("Неизвестная операция: '%s'", name));
                 }
             }
         }
-
-        @JsonValue
-        public String getName() {
-            return name;
-        }
+    }
+    @Override
+    public int compareTo(Event otherEvent) {
+        return this.getTimestamp().compareTo(otherEvent.getTimestamp());
     }
 }
+
