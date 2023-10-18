@@ -134,6 +134,7 @@ public class Event implements Comparable<Event> {
             }
         }
     }
+
     @Override
     public int compareTo(Event otherEvent) {
         return this.getTimestamp().compareTo(otherEvent.getTimestamp());
