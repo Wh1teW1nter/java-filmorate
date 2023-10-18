@@ -2,7 +2,9 @@ package ru.yandex.practicum.filmorate.controllers.implcontrollers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.model.Event;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.implservice.EventServiceImpl;
 import ru.yandex.practicum.filmorate.service.implservice.UserServiceImpl;
 
 import javax.validation.Valid;
@@ -16,9 +18,11 @@ import java.util.Optional;
 public class UserImplController {
 
     private final UserServiceImpl userService;
+    private final EventServiceImpl eventService;
 
-    public UserImplController(UserServiceImpl userService) {
+    public UserImplController(UserServiceImpl userService, EventServiceImpl eventService) {
         this.userService = userService;
+        this.eventService = eventService;
     }
 
 
@@ -68,6 +72,7 @@ public class UserImplController {
                           @PathVariable("friendId") @Min(0) Long friendId) {
         log.info("Получен PUT-запрос /users/{}/friends/{}", userId, friendId);
         log.info("Отправлен ответ на PUT-запрос /users/{}/friends/{}", userId, friendId);
+        eventService.addEvent(userId, friendId, "FRIEND", "ADD");
         userService.addFriend(userId, friendId);
     }
 
@@ -77,6 +82,7 @@ public class UserImplController {
         log.info("Получен DELETE-запрос /users/{}/friends/{}", userId, friendId);
         log.info("Отправлен ответ на DELETE-запрос /users/{}/friends/{}", userId, friendId);
         userService.deleteFriend(userId, friendId);
+        eventService.addEvent(userId, friendId, "FRIEND", "REMOVE");
     }
 
     @GetMapping("/{id}/friends")
@@ -99,9 +105,9 @@ public class UserImplController {
     }
 
     @GetMapping("/{id}/feed")
-    public List<String> getUserFeed(@PathVariable("id") @Min(0) Long userId) {
+    public List<Event> getUserFeed(@PathVariable("id") @Min(0) Long userId) {
         log.info("Получен GET-запрос users/{id}/feed с id {} ", userId);
-        List<String> userFeed = userService.getUserFeed(userId);
+        List<Event> userFeed = eventService.getUserFeed(userId);
         log.info("Отправлен ответ на GET-запрос users/{id}/feed с id {} ", userId);
         return userFeed;
     }

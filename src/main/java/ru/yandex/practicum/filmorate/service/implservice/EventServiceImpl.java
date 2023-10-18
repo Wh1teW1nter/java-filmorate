@@ -16,9 +16,9 @@ public class EventServiceImpl {
     private final EventDao eventDao;
     private final UserServiceImpl userService;
 
-    public List<Event> listUserEvents(Long id) { // получение всех событий
+    public List<Event> getUserFeed(Long id) { // получение всех событий
         userService.findById(id);
-        return this.eventDao.listEvents(id);
+        return this.eventDao.getUserFeed(id);
     }
 
 

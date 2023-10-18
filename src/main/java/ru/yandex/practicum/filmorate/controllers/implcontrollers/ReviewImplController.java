@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.controllers.implcontrollers;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Review;
+import ru.yandex.practicum.filmorate.service.implservice.EventServiceImpl;
 import ru.yandex.practicum.filmorate.service.implservice.ReviewServiceImpl;
 
 import javax.validation.Valid;
@@ -15,9 +16,11 @@ import java.util.Optional;
 @Slf4j
 public class ReviewImplController {
     private final ReviewServiceImpl reviewService;
+    private final EventServiceImpl eventService;
 
-    public ReviewImplController(ReviewServiceImpl reviewService) {
+    public ReviewImplController(ReviewServiceImpl reviewService, EventServiceImpl eventService) {
         this.reviewService = reviewService;
+        this.eventService = eventService;
     }
 
     @PostMapping
@@ -26,6 +29,7 @@ public class ReviewImplController {
         log.info("Получен POST-запрос /reviews с телом: {}", review);
         Optional<Review> createdReview = reviewService.save(review);
         log.info("Отправлен ответ на POST-запрос /reviews с телом: {}", createdReview);
+        eventService.addEvent(review.getUserId(), Long.valueOf(review.getReviewId()), "REVIEW", "ADD");
         return createdReview;
     }
 
@@ -34,11 +38,13 @@ public class ReviewImplController {
         log.info("Получен PUT-запрос /reviews с телом: {}", review);
         Optional<Review> updatedReview = reviewService.update(review);
         log.info("Отправлен ответ на PUT-запрос /reviews с телом: {}", updatedReview);
+        eventService.addEvent(review.getUserId(), Long.valueOf(review.getReviewId()), "REVIEW", "UPDATE");
         return updatedReview;
     }
 
     @DeleteMapping("/{reviewId}")
     public void delete(@PathVariable("reviewId") @Min(0) Long reviewId) {
+        eventService.addEvent(this.findById(reviewId).get().getUserId(), Long.valueOf(reviewId), "REVIEW", "REMOVE");
         log.info("Получен DELETE-запрос /reviews/{}", reviewId);
         reviewService.delete(reviewId);
         log.info("Отправлен ответ на DELETE-запрос /reviews/{}", reviewId);

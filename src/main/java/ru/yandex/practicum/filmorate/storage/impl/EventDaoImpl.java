@@ -26,9 +26,8 @@ public class EventDaoImpl implements EventDao {
 
 
     @Override
-    public List<Event> listEvents(Long id) {
+    public List<Event> getUserFeed(Long id) {
         List<Event> events = jdbcTemplate.query(GET_USER_EVENT.getTitle(), eventMapper, id);
-
         return events;
     }
 

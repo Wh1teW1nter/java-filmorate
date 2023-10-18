@@ -9,7 +9,7 @@ import java.util.List;
 public interface EventDao {
 
 
-    List<Event> listEvents(Long id); // Получить ленту событий по id пользователя
+    List<Event> getUserFeed(Long id); // Получить ленту событий по id пользователя
 
     Event getEvent(Long id); // Получение события по id
 

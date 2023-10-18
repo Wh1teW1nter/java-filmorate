@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.controllers.implcontrollers;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.service.implservice.EventServiceImpl;
 import ru.yandex.practicum.filmorate.service.implservice.FilmServiceImpl;
 
 import javax.validation.Valid;
@@ -16,9 +17,11 @@ import java.util.Optional;
 public class FilmImplController {
 
     private final FilmServiceImpl filmService;
+    private final EventServiceImpl eventService;
 
-    public FilmImplController(FilmServiceImpl filmService) {
+    public FilmImplController(FilmServiceImpl filmService, EventServiceImpl eventService) {
         this.filmService = filmService;
+        this.eventService = eventService;
     }
 
     @GetMapping
@@ -69,6 +72,8 @@ public class FilmImplController {
         log.info("Получен PUT-запрос /films/{}/like/{}", filmId, userId);
         log.info("Отправлен ответ на PUT-запрос /films/{}/like/{}", filmId, userId);
         filmService.addLike(filmId, userId);
+        eventService.addEvent(userId, Long.valueOf(filmId), "LIKE", "ADD");
+
     }
 
     @DeleteMapping("/{id}/like/{userId}")
@@ -77,6 +82,8 @@ public class FilmImplController {
         log.info("Получен DELETE-запрос /films/{}/like/{}", filmId, userId);
         log.info("Отправлен ответ на DELETE-запрос /films/{}/like/{}", filmId, userId);
         filmService.deleteLike(filmId, userId);
+        eventService.addEvent(userId, Long.valueOf(filmId), "LIKE", "REMOVE");
+
     }
 
     @GetMapping("/popular")
