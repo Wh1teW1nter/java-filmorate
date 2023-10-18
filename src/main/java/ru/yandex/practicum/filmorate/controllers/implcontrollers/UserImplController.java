@@ -105,10 +105,8 @@ public class UserImplController {
     }
 
     @GetMapping("/{id}/feed")
-    public List<Event> getUserFeed(@PathVariable("id") @Min(0) Long userId) {
+    public List<Event> getUserFeed(@RequestBody @PathVariable Long userId) {
         log.info("Получен GET-запрос users/{id}/feed с id {} ", userId);
-        List<Event> userFeed = eventService.getUserFeed(userId);
-        log.info("Отправлен ответ на GET-запрос users/{id}/feed с id {} ", userId);
-        return userFeed;
+        return eventService.getUserFeed(userId);
     }
 }
