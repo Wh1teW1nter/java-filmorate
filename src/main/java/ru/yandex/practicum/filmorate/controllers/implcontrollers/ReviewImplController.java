@@ -50,14 +50,6 @@ public class ReviewImplController {
         log.info("Отправлен ответ на DELETE-запрос /reviews/{}", reviewId);
     }
 
-    /*@GetMapping
-    public List<Review> findAll() {
-        log.info("Получен GET-запрос /reviews");
-        List<Review> foundedReviews = reviewService.findAll();
-        log.info("Отправлен ответ на GET-запрос /reviews с телом: {}", foundedReviews);
-        return foundedReviews;
-    }*/
-
     @GetMapping("/{reviewId}")
     public Optional<Review> findById(@PathVariable("reviewId") @Min(0) Long reviewId) {
         log.info("Получен GET-запрос /reviews/{}", reviewId);

@@ -135,5 +135,6 @@ CREATE TABLE IF NOT EXISTS events
     entity_id bigint,
     event_type event_type_name,
     operation_type operation_type_name,
-    time_stamp bigint
+    time_stamp bigint,
+    PRIMARY KEY(event_id)
 );
