@@ -16,7 +16,6 @@ import ru.yandex.practicum.filmorate.storage.dao.EventDao;
 
 import static ru.yandex.practicum.filmorate.storage.sqloperation.EventSqlOperation.*;
 
-
 @Slf4j
 @Repository
 @RequiredArgsConstructor
