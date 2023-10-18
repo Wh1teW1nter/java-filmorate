@@ -12,7 +12,7 @@ public enum EventSqlOperation {
                     "FROM events " +
                     "WHERE event_id = ?"),
 
-    SELECT_EVENT_ID (
+    SELECT_EVENT_ID(
             "SELECT event_id " +
                     "FROM events " +
                     "WHERE event_id = ?"),
