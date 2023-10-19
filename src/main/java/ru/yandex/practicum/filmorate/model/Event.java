@@ -19,24 +19,15 @@ import java.util.Map;
 public class Event implements Comparable<Event> {
     Long eventId;
 
-    @NotNull
-    @NotBlank
-    @NotEmpty
-    Long userId;
+    @NotNull @NotBlank @NotEmpty Long userId;
 
-    @NotNull
-    @NotBlank
-    @NotEmpty
-    Long entityId;
+    @NotNull @NotBlank @NotEmpty Long entityId;
 
-    @NotNull
-    EventType eventType;
+    @NotNull EventType eventType;
 
-    @NotNull
-    OperationType operation;
+    @NotNull OperationType operation;
 
-    @PastOrPresent
-    Long timestamp;
+    @PastOrPresent Long timestamp;
 
     public Map<String, Object> toMap() {
 
@@ -53,9 +44,7 @@ public class Event implements Comparable<Event> {
     }
 
     public enum EventType {
-        FRIEND("FRIEND"),
-        LIKE("LIKE"),
-        REVIEW("REVIEW");
+        FRIEND("FRIEND"), LIKE("LIKE"), REVIEW("REVIEW");
 
         private final String name;
 

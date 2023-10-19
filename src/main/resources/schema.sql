@@ -84,26 +84,6 @@ CREATE TABLE if not exists reviews (
 drop sequence if exists review_sequence;
 create sequence if not exists review_sequence START with 1 minvalue 1 increment by 1;
 
-drop table if exists review_like cascade;
--- create table if not exists review_like
--- (
---     user_id INTEGER NOT NULL,
---     review_id INTEGER NOT NULL,
---     PRIMARY KEY(review_id, user_id),
---     FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE CASCADE,
---     FOREIGN KEY(review_id) REFERENCES reviews(review_id) ON DELETE CASCADE
--- );
-
--- drop table if exists review_dislike cascade;
--- create table if not exists review_dislike
--- (
---     user_id INTEGER NOT NULL,
---     review_id INTEGER NOT NULL,
---     PRIMARY KEY(review_id, user_id),
---     FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE CASCADE,
---     FOREIGN KEY(review_id) REFERENCES reviews(review_id) ON DELETE CASCADE
--- );
-
 drop table if exists review_dislike cascade;
 CREATE TABLE IF NOT EXISTS `review_dislike` (
     `review_id` integer NOT NULL,

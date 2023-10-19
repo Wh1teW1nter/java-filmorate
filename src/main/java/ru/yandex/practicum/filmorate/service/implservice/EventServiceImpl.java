@@ -16,13 +16,13 @@ public class EventServiceImpl {
     private final EventDao eventDao;
     private final UserServiceImpl userService;
 
-    public List<Event> getUserFeed(Long id) { // получение всех событий
+    public List<Event> getUserFeed(Long id) {
         userService.findById(id);
         return this.eventDao.getUserFeed(id);
     }
 
 
-    public Event addEvent(Long userId, Long entityId, String eventType, String operationType) { // добавление события
+    public Event addEvent(Long userId, Long entityId, String eventType, String operationType) {
         userService.findById(userId);
         return this.eventDao.addEvent(userId, entityId, eventType, operationType);
     }
