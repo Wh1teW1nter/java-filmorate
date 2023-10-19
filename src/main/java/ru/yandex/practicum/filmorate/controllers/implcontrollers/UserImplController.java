@@ -104,7 +104,6 @@ public class UserImplController {
 
     @GetMapping("/{id}/recommendations")
     public List<Film> getRecommendations(@PathVariable("id") @Min(0) Long userId) {
-
         log.info("Получен GET-запрос /users/{id}/recommendations с id {}" + userId);
         List<Film> recommendedFilms = userService.getRecommendation(userId);
         log.info("Отправлен ответ GET-запрос /users/{id}/recommendations с id {} и телом {}", userId, recommendedFilms);
