@@ -102,7 +102,7 @@ public class UserServiceImpl {
             throw new ValidationException("Логин не должен содежать пробелы");
         }
     }
-  
+
     public List<Film> getRecommendation(Long userId) {
         userIdExistsValidation(userId);
         return recommendationsDao.getRecommendation(userId);
@@ -112,9 +112,6 @@ public class UserServiceImpl {
     @Qualifier("recommendationDaoImpl")
     public void setRecommendationsDao(RecommendationDao recommendationsDao) {
         this.recommendationsDao = recommendationsDao;
-    public List<String> getUserFeed(long userId) {
-        List<String> userFeed = new ArrayList<>();
-        return userFeed;
     }
 
     @Autowired
