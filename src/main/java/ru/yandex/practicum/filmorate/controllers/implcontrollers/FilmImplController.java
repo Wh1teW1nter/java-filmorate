@@ -66,7 +66,7 @@ public class FilmImplController {
     @GetMapping("/director/{directorId}")
     public List<Film> getSortedDirectorFilms(@PathVariable Long directorId,
                                              @RequestParam(defaultValue = "year") String sortBy) {
-        log.info("Получен GET-запрос /director/{}/?sortBy={}", directorId, sortBy);
+        log.info("Получен GET-запрос /films/director/{}/?sortBy={}", directorId, sortBy);
         return filmService.getSortedDirectorFilms(directorId, sortBy);
     }
 
@@ -110,5 +110,13 @@ public class FilmImplController {
         log.info("Отправлен ответ на GET-запрос  /films/popular?count={limit}&genreId={genreId}&year={year} " +
                 "с genreId {} year {} и count {} c телом {}", genreId, year, count, foundedPopularFilms);
         return foundedPopularFilms;
+    }
+
+    @GetMapping("/search")
+    public List<Film> searchFilms(@RequestParam String query, @RequestParam String by) {
+        log.info("Получен GET-запрос /films/search?query={}&by={}", query, by);
+        List<Film> filmsList = filmService.searchFilms(query, by);
+        log.info("Отправлен ответ на GET-запрос /films/search?query={}&by={} c телом {}", query, by, filmsList);
+        return filmsList;
     }
 }

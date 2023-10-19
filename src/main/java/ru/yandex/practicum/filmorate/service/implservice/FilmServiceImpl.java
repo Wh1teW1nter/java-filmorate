@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.exceptions.UnknownSearchingParameterException;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.exceptions.director.DirectorNotFoundException;
 import ru.yandex.practicum.filmorate.exceptions.film.FilmNotExistException;
@@ -84,6 +85,18 @@ public class FilmServiceImpl {
             count = 10L;
         }
         return filmDao.getSortedFilmsByLikes(count);
+    }
+
+    public List<Film> searchFilms(String query, String by) {
+        if (by.equals("director")) {
+            return filmDao.searchFilmsByDirector(query);
+        } else if (by.equals("title")) {
+            return filmDao.searchFilmsByTitle(query);
+        } else if (by.equals("title,director") || by.equals("director,title")) {
+            return filmDao.searchFilmsByDirectorAndTitle(query);
+        } else {
+            throw new UnknownSearchingParameterException("Неверный пареметр поиска:" + by);
+        }
     }
 
     private void filmExistsValidation(Film film) {
