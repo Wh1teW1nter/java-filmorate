@@ -26,15 +26,15 @@ public interface FilmDao {
     List<Film> getSortedFilmsByLikes(Long count);
 
     List<Long> getLikesByFilmId(long filmId);
-  
+
     List<Film> searchFilmsByDirector(String director);
 
     List<Film> searchFilmsByTitle(String title);
 
     List<Film> searchFilmsByDirectorAndTitle(String query);
-  
+
     List<Film> getCommonFilms(long userId, long friendId);
 
     List<Film> getPopularFilms(long genreId, int year, int count);
-  
+
 }
