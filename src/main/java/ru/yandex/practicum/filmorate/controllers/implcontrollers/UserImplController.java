@@ -104,7 +104,7 @@ public class UserImplController {
                 "и otherId {} c телом {}", userId, friendId, foundedCommonFriends);
         return foundedCommonFriends;
     }
-  
+
     @GetMapping("/{id}/recommendations")
     public List<Film> getRecommendations(@PathVariable("id") @Min(0) Long userId) {
 
@@ -113,7 +113,7 @@ public class UserImplController {
         log.info("Отправлен ответ GET-запрос /users/{id}/recommendations с id {} и телом {}", userId, recommendedFilms);
         return recommendedFilms;
     }
-  
+
     @GetMapping("/{id}/feed")
     public List<Event> getUserFeed(@RequestBody @PathVariable("id") @Min(0) Long userId) {
         log.info("Получен GET-запрос users/{id}/feed с id {} ", userId);
