@@ -13,7 +13,7 @@ import ru.yandex.practicum.filmorate.exceptions.user.UserNotExistException;
 import ru.yandex.practicum.filmorate.exceptions.user.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.ErrorResponse;
 
-@RestControllerAdvice(assignableTypes = {UserImplController.class, FilmImplController.class})
+@RestControllerAdvice(assignableTypes = {UserImplController.class, FilmImplController.class, })
 public class UserControllerExceptionHandler {
 
     @ExceptionHandler
