@@ -8,7 +8,6 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exceptions.UnknownSortTypeException;
 import ru.yandex.practicum.filmorate.exceptions.film.FilmNotExistException;
-import ru.yandex.practicum.filmorate.exceptions.film.FilmorateAlreadyExistsException;
 import ru.yandex.practicum.filmorate.mapper.DirectorMapper;
 import ru.yandex.practicum.filmorate.mapper.FilmMapper;
 import ru.yandex.practicum.filmorate.mapper.GenreMapper;
@@ -110,10 +109,9 @@ public class FilmDaoImpl implements FilmDao {
 
     @Override
     public void addLike(long filmId, long userId) {
-        if (isLikeExistsInFilm(filmId, userId)) {
-            throw new FilmorateAlreadyExistsException("Лайк пользователя " + filmId + " уже стоит");
+        if (!isLikeExistsInFilm(filmId, userId)) {
+            jdbcTemplate.update(CREATE_LIKE.getTitle(), filmId, userId);
         }
-        jdbcTemplate.update(CREATE_LIKE.getTitle(), filmId, userId);
     }
 
     @Override
