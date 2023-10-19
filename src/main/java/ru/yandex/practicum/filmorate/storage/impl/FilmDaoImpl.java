@@ -9,8 +9,10 @@ import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exceptions.UnknownSortTypeException;
 import ru.yandex.practicum.filmorate.exceptions.film.FilmNotExistException;
 import ru.yandex.practicum.filmorate.exceptions.film.FilmorateAlreadyExistsException;
+import ru.yandex.practicum.filmorate.mapper.DirectorMapper;
 import ru.yandex.practicum.filmorate.mapper.FilmMapper;
 import ru.yandex.practicum.filmorate.mapper.GenreMapper;
+import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.storage.dao.FilmDao;
@@ -25,6 +27,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static ru.yandex.practicum.filmorate.storage.sqloperation.FilmSqlOperation.*;
+import static ru.yandex.practicum.filmorate.storage.sqloperation.DirectorSqlOperation.*;
 
 @Repository
 public class FilmDaoImpl implements FilmDao {
@@ -255,7 +258,9 @@ public class FilmDaoImpl implements FilmDao {
                 new FilmMapper(), year, year, genreId, genreId, count);
         for (Film film : popularFilm) {
             List<Genre> genres = jdbcTemplate.query(GET_FILMS_GENRES.getTitle(), new GenreMapper(), film.getId());
+            List<Director> directors = jdbcTemplate.query(GET_DIRECTOR_BY_FILM_ID.getTitle(), new DirectorMapper(), film.getId());
             film.setGenres(genres);
+            film.setDirectors(directors);
             if (film.getGenres() == null) {
                 film.setGenres(new ArrayList<Genre>());
             }
