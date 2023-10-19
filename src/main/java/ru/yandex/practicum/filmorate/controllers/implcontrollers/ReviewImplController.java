@@ -38,13 +38,13 @@ public class ReviewImplController {
         log.info("Получен PUT-запрос /reviews с телом: {}", review);
         Optional<Review> updatedReview = reviewService.update(review);
         log.info("Отправлен ответ на PUT-запрос /reviews с телом: {}", updatedReview);
-        eventService.addEvent(review.getUserId(), Long.valueOf(review.getReviewId()), "REVIEW", "UPDATE");
+        eventService.addEvent(updatedReview.get().getUserId(), review.getReviewId(), "REVIEW", "UPDATE");
         return updatedReview;
     }
 
     @DeleteMapping("/{reviewId}")
     public void delete(@PathVariable("reviewId") @Min(0) Long reviewId) {
-        eventService.addEvent(reviewService.findById(reviewId).get().getUserId(), Long.valueOf(reviewId), "REVIEW", "REMOVE");
+        eventService.addEvent(reviewService.findById(reviewId).get().getUserId(), reviewId, "REVIEW", "REMOVE");
         log.info("Получен DELETE-запрос /reviews/{}", reviewId);
         reviewService.delete(reviewId);
         log.info("Отправлен ответ на DELETE-запрос /reviews/{}", reviewId);
