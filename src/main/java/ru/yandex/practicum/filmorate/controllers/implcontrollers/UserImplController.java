@@ -2,7 +2,9 @@ package ru.yandex.practicum.filmorate.controllers.implcontrollers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.model.Event;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.implservice.EventServiceImpl;
 import ru.yandex.practicum.filmorate.service.implservice.UserServiceImpl;
 
 import javax.validation.Valid;
@@ -16,9 +18,11 @@ import java.util.Optional;
 public class UserImplController {
 
     private final UserServiceImpl userService;
+    private final EventServiceImpl eventService;
 
-    public UserImplController(UserServiceImpl userService) {
+    public UserImplController(UserServiceImpl userService, EventServiceImpl eventService) {
         this.userService = userService;
+        this.eventService = eventService;
     }
 
 
@@ -67,8 +71,9 @@ public class UserImplController {
     public void addFriend(@PathVariable("id") @Min(0) Long userId,
                           @PathVariable("friendId") @Min(0) Long friendId) {
         log.info("Получен PUT-запрос /users/{}/friends/{}", userId, friendId);
-        log.info("Отправлен ответ на PUT-запрос /users/{}/friends/{}", userId, friendId);
         userService.addFriend(userId, friendId);
+        log.info("Отправлен ответ на PUT-запрос /users/{}/friends/{}", userId, friendId);
+        eventService.addEvent(userId, friendId, "FRIEND", "ADD");
     }
 
     @DeleteMapping("/{id}/friends/{friendId}")
@@ -77,6 +82,7 @@ public class UserImplController {
         log.info("Получен DELETE-запрос /users/{}/friends/{}", userId, friendId);
         log.info("Отправлен ответ на DELETE-запрос /users/{}/friends/{}", userId, friendId);
         userService.deleteFriend(userId, friendId);
+        eventService.addEvent(userId, friendId, "FRIEND", "REMOVE");
     }
 
     @GetMapping("/{id}/friends")
@@ -96,5 +102,11 @@ public class UserImplController {
         log.info("Отправлен ответ на GET-запрос users/{id}/friends/common/{otherId} с id {} " +
                 "и otherId {} c телом {}", userId, friendId, foundedCommonFriends);
         return foundedCommonFriends;
+    }
+
+    @GetMapping("/{id}/feed")
+    public List<Event> getUserFeed(@RequestBody @PathVariable("id") @Min(0) Long userId) {
+        log.info("Получен GET-запрос users/{id}/feed с id {} ", userId);
+        return eventService.getUserFeed(userId);
     }
 }
