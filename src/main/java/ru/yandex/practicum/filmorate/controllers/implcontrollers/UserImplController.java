@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.controllers.implcontrollers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Event;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.implservice.EventServiceImpl;
@@ -25,7 +26,6 @@ public class UserImplController {
         this.eventService = eventService;
     }
 
-
     @GetMapping
     public List<User> findAll() {
         log.info("Получен GET-запрос /users");
@@ -42,7 +42,6 @@ public class UserImplController {
         return foundedUser;
     }
 
-
     @PostMapping
     public Optional<User> save(@RequestBody @Valid User user) {
         log.info("Получен POST-запрос /users с телом: {}", user);
@@ -50,7 +49,6 @@ public class UserImplController {
         log.info("Отправлен ответ на POST-запрос /users с телом: {}", createdUser);
         return createdUser;
     }
-
 
     @PutMapping
     public Optional<User> update(@RequestBody @Valid User user) {
@@ -102,6 +100,14 @@ public class UserImplController {
         log.info("Отправлен ответ на GET-запрос users/{id}/friends/common/{otherId} с id {} " +
                 "и otherId {} c телом {}", userId, friendId, foundedCommonFriends);
         return foundedCommonFriends;
+    }
+
+    @GetMapping("/{id}/recommendations")
+    public List<Film> getRecommendations(@PathVariable("id") @Min(0) Long userId) {
+        log.info("Получен GET-запрос /users/{id}/recommendations с id {}" + userId);
+        List<Film> recommendedFilms = userService.getRecommendation(userId);
+        log.info("Отправлен ответ GET-запрос /users/{id}/recommendations с id {} и телом {}", userId, recommendedFilms);
+        return recommendedFilms;
     }
 
     @GetMapping("/{id}/feed")

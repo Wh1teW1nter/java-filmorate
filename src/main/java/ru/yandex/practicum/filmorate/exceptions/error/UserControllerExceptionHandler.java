@@ -8,6 +8,7 @@ import ru.yandex.practicum.filmorate.controllers.implcontrollers.FilmImplControl
 import ru.yandex.practicum.filmorate.controllers.implcontrollers.UserImplController;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.exceptions.user.FriendNotAddedException;
+import ru.yandex.practicum.filmorate.exceptions.user.RecommendationsNotFound;
 import ru.yandex.practicum.filmorate.exceptions.user.UserNotExistException;
 import ru.yandex.practicum.filmorate.exceptions.user.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.ErrorResponse;
@@ -34,6 +35,12 @@ public class UserControllerExceptionHandler {
     public ErrorResponse handleThrowable(final Throwable e) {
         return new ErrorResponse("Server error",
                 "An unexpected error has occurred " + e.getMessage());
+    }
+
+    @ExceptionHandler(RecommendationsNotFound.class)
+    @ResponseStatus(HttpStatus.OK)
+    public ErrorResponse handleRecommendationsNotFound(final RuntimeException e) {
+        return new ErrorResponse("Recommendations not found", e.getMessage());
     }
 
 }

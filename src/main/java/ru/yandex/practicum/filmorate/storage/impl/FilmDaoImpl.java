@@ -123,7 +123,7 @@ public class FilmDaoImpl implements FilmDao {
         List<Film> sortedFilm = jdbcTemplate.query(GET_MOST_POPULAR_FILMS.getTitle(), new FilmMapper(), count);
         for (Film film : sortedFilm) {
             if (film.getGenres() == null) {
-                film.setGenres(new ArrayList<Genre>());
+                film.setGenres(genreDao.getGenresByFilmId(film.getId()));
             }
         }
         return sortedFilm;
