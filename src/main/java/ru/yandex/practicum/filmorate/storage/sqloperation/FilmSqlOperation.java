@@ -115,7 +115,7 @@ public enum FilmSqlOperation {
             "LEFT JOIN director_films df ON f.film_id = df.film_id " +
             "LEFT JOIN director d ON df.director_id = d.id " +
             "WHERE lower(d.name) LIKE lower(?) OR lower(f.film_name) LIKE lower(?) " +
-            "ORDER BY (SELECT COUNT(*) FROM film_like fl WHERE fl.film_id = f.film_id) DESC");
+            "ORDER BY (SELECT COUNT(*) FROM film_like fl WHERE fl.film_id = f.film_id) DESC"),
   
     GET_FILMS_GENRES(
             "SELECT  g.* FROM FILM_GENRE fg " +
