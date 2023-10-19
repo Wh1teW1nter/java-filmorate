@@ -2,7 +2,10 @@ package ru.yandex.practicum.filmorate.controllers.implcontrollers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Event;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.implservice.EventServiceImpl;
 import ru.yandex.practicum.filmorate.service.implservice.UserServiceImpl;
 
 import javax.validation.Valid;
@@ -16,11 +19,12 @@ import java.util.Optional;
 public class UserImplController {
 
     private final UserServiceImpl userService;
+    private final EventServiceImpl eventService;
 
-    public UserImplController(UserServiceImpl userService) {
+    public UserImplController(UserServiceImpl userService, EventServiceImpl eventService) {
         this.userService = userService;
+        this.eventService = eventService;
     }
-
 
     @GetMapping
     public List<User> findAll() {
@@ -38,7 +42,6 @@ public class UserImplController {
         return foundedUser;
     }
 
-
     @PostMapping
     public Optional<User> save(@RequestBody @Valid User user) {
         log.info("Получен POST-запрос /users с телом: {}", user);
@@ -46,7 +49,6 @@ public class UserImplController {
         log.info("Отправлен ответ на POST-запрос /users с телом: {}", createdUser);
         return createdUser;
     }
-
 
     @PutMapping
     public Optional<User> update(@RequestBody @Valid User user) {
@@ -67,8 +69,9 @@ public class UserImplController {
     public void addFriend(@PathVariable("id") @Min(0) Long userId,
                           @PathVariable("friendId") @Min(0) Long friendId) {
         log.info("Получен PUT-запрос /users/{}/friends/{}", userId, friendId);
-        log.info("Отправлен ответ на PUT-запрос /users/{}/friends/{}", userId, friendId);
         userService.addFriend(userId, friendId);
+        log.info("Отправлен ответ на PUT-запрос /users/{}/friends/{}", userId, friendId);
+        eventService.addEvent(userId, friendId, "FRIEND", "ADD");
     }
 
     @DeleteMapping("/{id}/friends/{friendId}")
@@ -77,6 +80,7 @@ public class UserImplController {
         log.info("Получен DELETE-запрос /users/{}/friends/{}", userId, friendId);
         log.info("Отправлен ответ на DELETE-запрос /users/{}/friends/{}", userId, friendId);
         userService.deleteFriend(userId, friendId);
+        eventService.addEvent(userId, friendId, "FRIEND", "REMOVE");
     }
 
     @GetMapping("/{id}/friends")
@@ -96,5 +100,19 @@ public class UserImplController {
         log.info("Отправлен ответ на GET-запрос users/{id}/friends/common/{otherId} с id {} " +
                 "и otherId {} c телом {}", userId, friendId, foundedCommonFriends);
         return foundedCommonFriends;
+    }
+
+    @GetMapping("/{id}/recommendations")
+    public List<Film> getRecommendations(@PathVariable("id") @Min(0) Long userId) {
+        log.info("Получен GET-запрос /users/{id}/recommendations с id {}" + userId);
+        List<Film> recommendedFilms = userService.getRecommendation(userId);
+        log.info("Отправлен ответ GET-запрос /users/{id}/recommendations с id {} и телом {}", userId, recommendedFilms);
+        return recommendedFilms;
+    }
+
+    @GetMapping("/{id}/feed")
+    public List<Event> getUserFeed(@RequestBody @PathVariable("id") @Min(0) Long userId) {
+        log.info("Получен GET-запрос users/{id}/feed с id {} ", userId);
+        return eventService.getUserFeed(userId);
     }
 }
