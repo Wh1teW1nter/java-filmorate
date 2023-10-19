@@ -6,9 +6,11 @@ import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import ru.yandex.practicum.filmorate.exceptions.UnknownSortTypeException;
 import ru.yandex.practicum.filmorate.exceptions.film.FilmNotExistException;
 import ru.yandex.practicum.filmorate.exceptions.film.FilmorateAlreadyExistsException;
 import ru.yandex.practicum.filmorate.mapper.FilmMapper;
+import ru.yandex.practicum.filmorate.mapper.GenreMapper;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.storage.dao.FilmDao;
@@ -31,27 +33,25 @@ public class FilmDaoImpl implements FilmDao {
     private static final String GENRE_QUALIFIER = "genreDaoImpl";
     private final JdbcTemplate jdbcTemplate;
     private final GenreDao genreDao;
+    private final DirectorDaoImpl directorDao;
 
-    public FilmDaoImpl(JdbcTemplate jdbcTemplate, @Qualifier(GENRE_QUALIFIER) GenreDao genreDao) {
+    public FilmDaoImpl(JdbcTemplate jdbcTemplate, @Qualifier(GENRE_QUALIFIER) GenreDao genreDao, DirectorDaoImpl directorDao) {
         this.jdbcTemplate = jdbcTemplate;
         this.genreDao = genreDao;
+        this.directorDao = directorDao;
     }
 
     @Override
     public List<Film> findAll() {
         List<Film> foundedFilm = jdbcTemplate.query(GET_ALL_FILMS.getTitle(), new FilmMapper());
-        for (Film film : foundedFilm) {
-            if (film.getGenres() == null) {
-                film.setGenres(genreDao.getGenresByFilmId(film.getId()));
-            }
-        }
-        return foundedFilm;
+        return addGenreAndDirectorToFilms(foundedFilm);
     }
 
     @Override
     public Film save(Film film) {
         filmInsertAndSetId(film);
         addGenresToFilm(film);
+        directorDao.addDirectorToFilm(film);
         return film;
     }
 
@@ -65,6 +65,8 @@ public class FilmDaoImpl implements FilmDao {
                 film.getMpa().getId(),
                 film.getId());
         setGenresToFilm(film);
+        directorDao.deleteDirectorsFromFilm(film.getId());
+        directorDao.addDirectorToFilm(film);
         return Optional.of(film);
     }
 
@@ -83,8 +85,24 @@ public class FilmDaoImpl implements FilmDao {
         if (film.isPresent()) {
             film.get().setGenres(genreDao.getGenresByFilmId(filmId));
             film.get().getFilmLikes().addAll(new HashSet<>(getLikesByFilmId(filmId)));
+            film.get().setDirectors(directorDao.getDirectorByFilmId(filmId));
         }
         return film;
+    }
+
+    @Override
+    public List<Film> getSortedDirectorFilms(Long directorId, String sortBy) {
+        List<Film> foundedFilm;
+        switch (sortBy) {
+            case "year":
+                foundedFilm = jdbcTemplate.query(GET_DIRECTOR_FILMS_SORTED_BY_YEAR.getTitle(), new FilmMapper(), directorId);
+                return addGenreAndDirectorToFilms(foundedFilm);
+            case "likes":
+                foundedFilm = jdbcTemplate.query(GET_DIRECTOR_FILMS_SORTED_BY_LIKES.getTitle(), new FilmMapper(), directorId);
+                return addGenreAndDirectorToFilms(foundedFilm);
+            default:
+                throw new UnknownSortTypeException("Unknown Sort Type");
+        }
     }
 
     @Override
@@ -200,5 +218,43 @@ public class FilmDaoImpl implements FilmDao {
                 }
             });
         }
+    }
+
+    @Override
+    public List<Film> getCommonFilms(long userId, long friendId) {
+        List<Film> commonFilm = jdbcTemplate.query(GET_COMMON_FILMS.getTitle(), new FilmMapper(), userId, friendId);
+        for (Film film : commonFilm) {
+            if (film.getGenres() == null) {
+                film.setGenres(new ArrayList<Genre>());
+            }
+        }
+        return commonFilm;
+    }
+
+    @Override
+    public List<Film> getPopularFilms(long genreId, int year, int count) {
+        List<Film> popularFilm = jdbcTemplate.query(GET_POPULAR_FILMS.getTitle(),
+                new FilmMapper(), year, year, genreId, genreId, count);
+        for (Film film : popularFilm) {
+            List<Genre> genres = jdbcTemplate.query(GET_FILMS_GENRES.getTitle(), new GenreMapper(), film.getId());
+            film.setGenres(genres);
+            if (film.getGenres() == null) {
+                film.setGenres(new ArrayList<Genre>());
+            }
+            if (film.getDirectors() == null) {
+                film.setDirectors(new ArrayList<>());
+            }
+        }
+        return popularFilm;
+    }
+
+    private List<Film> addGenreAndDirectorToFilms(List<Film> films) {
+        for (Film film : films) {
+            if (film.getGenres() == null) {
+                film.setGenres(genreDao.getGenresByFilmId(film.getId()));
+                film.setDirectors(directorDao.getDirectorByFilmId(film.getId()));
+            }
+        }
+        return films;
     }
 }
