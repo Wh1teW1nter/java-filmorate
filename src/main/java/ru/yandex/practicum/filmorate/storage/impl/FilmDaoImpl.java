@@ -10,6 +10,7 @@ import ru.yandex.practicum.filmorate.exceptions.UnknownSortTypeException;
 import ru.yandex.practicum.filmorate.exceptions.film.FilmNotExistException;
 import ru.yandex.practicum.filmorate.exceptions.film.FilmorateAlreadyExistsException;
 import ru.yandex.practicum.filmorate.mapper.FilmMapper;
+import ru.yandex.practicum.filmorate.mapper.GenreMapper;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.storage.dao.FilmDao;
@@ -235,6 +236,34 @@ public class FilmDaoImpl implements FilmDao {
                 }
             });
         }
+    }
+
+    @Override
+    public List<Film> getCommonFilms(long userId, long friendId) {
+        List<Film> commonFilm = jdbcTemplate.query(GET_COMMON_FILMS.getTitle(), new FilmMapper(), userId, friendId);
+        for (Film film : commonFilm) {
+            if (film.getGenres() == null) {
+                film.setGenres(new ArrayList<Genre>());
+            }
+        }
+        return commonFilm;
+    }
+
+    @Override
+    public List<Film> getPopularFilms(long genreId, int year, int count) {
+        List<Film> popularFilm = jdbcTemplate.query(GET_POPULAR_FILMS.getTitle(),
+                new FilmMapper(), year, year, genreId, genreId, count);
+        for (Film film : popularFilm) {
+            List<Genre> genres = jdbcTemplate.query(GET_FILMS_GENRES.getTitle(), new GenreMapper(), film.getId());
+            film.setGenres(genres);
+            if (film.getGenres() == null) {
+                film.setGenres(new ArrayList<Genre>());
+            }
+            if (film.getDirectors() == null) {
+                film.setDirectors(new ArrayList<>());
+            }
+        }
+        return popularFilm;
     }
 
     private List<Film> addGenreAndDirectorToFilms(List<Film> films) {

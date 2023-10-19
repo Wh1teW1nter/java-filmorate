@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.controllers.implcontrollers;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.service.implservice.EventServiceImpl;
 import ru.yandex.practicum.filmorate.service.implservice.FilmServiceImpl;
 
 import javax.validation.Valid;
@@ -16,9 +17,11 @@ import java.util.Optional;
 public class FilmImplController {
 
     private final FilmServiceImpl filmService;
+    private final EventServiceImpl eventService;
 
-    public FilmImplController(FilmServiceImpl filmService) {
+    public FilmImplController(FilmServiceImpl filmService, EventServiceImpl eventService) {
         this.filmService = filmService;
+        this.eventService = eventService;
     }
 
     @GetMapping
@@ -71,25 +74,42 @@ public class FilmImplController {
     public void addLike(@PathVariable("id") @Min(0) Long filmId,
                         @PathVariable("userId") @Min(0) Long userId) {
         log.info("Получен PUT-запрос /films/{}/like/{}", filmId, userId);
-        log.info("Отправлен ответ на PUT-запрос /films/{}/like/{}", filmId, userId);
         filmService.addLike(filmId, userId);
+        log.info("Отправлен ответ на PUT-запрос /films/{}/like/{}", filmId, userId);
+        eventService.addEvent(userId, filmId, "LIKE", "ADD");
+
     }
 
     @DeleteMapping("/{id}/like/{userId}")
     public void deleteLike(@PathVariable("id") @Min(0) Long filmId,
                            @PathVariable("userId") @Min(0) Long userId) {
         log.info("Получен DELETE-запрос /films/{}/like/{}", filmId, userId);
-        log.info("Отправлен ответ на DELETE-запрос /films/{}/like/{}", filmId, userId);
         filmService.deleteLike(filmId, userId);
+        log.info("Отправлен ответ на DELETE-запрос /films/{}/like/{}", filmId, userId);
+        eventService.addEvent(userId, filmId, "LIKE", "REMOVE");
+
+    }
+
+    @GetMapping("/common")
+    public List<Film> getCommonFilms(@RequestParam long userId, @RequestParam long friendId) {
+        log.info("Получен GET-запрос films/common?userId={userId}&friendId={friendId} с id {} " +
+                "и otherId {}", userId, friendId);
+        List<Film> foundedCommonFilms = filmService.getCommonFilms(userId, friendId);
+        log.info("Отправлен ответ на GET-запрос users/{id}/friends/common/{otherId} с id {} " +
+                "и otherId {} c телом {}", userId, friendId, foundedCommonFilms);
+        return foundedCommonFilms;
     }
 
     @GetMapping("/popular")
-    public List<Film> getSortedFilmsByLikes(@RequestParam(value = "count", required = false, defaultValue = "10")
-                                            @Min(1) Long count) {
-        log.info("Получен GET-запрос /popular?count={}", count);
-        List<Film> filmsList = filmService.getSortedFilmsByLikes(count);
-        log.info("Отправлен ответ на GET-запрос /popular c телом {}", filmsList);
-        return filmsList;
+    public List<Film> getPopularFilms(@RequestParam(value = "count", required = false, defaultValue = "10") int count,
+                                      @RequestParam(value = "genreId", required = false, defaultValue = "-1") Long genreId,
+                                      @RequestParam(value = "year", required = false, defaultValue = "-1") Integer year) {
+        log.info("Получен GET-запрос  /films/popular?count={limit}&genreId={genreId}&year={year} с genreId {} " +
+                " year {} и count {}", genreId, year, count);
+        List<Film> foundedPopularFilms = filmService.getPopularFilms(genreId, year, count);
+        log.info("Отправлен ответ на GET-запрос  /films/popular?count={limit}&genreId={genreId}&year={year} " +
+                "с genreId {} year {} и count {} c телом {}", genreId, year, count, foundedPopularFilms);
+        return foundedPopularFilms;
     }
 
     @GetMapping("/search")
