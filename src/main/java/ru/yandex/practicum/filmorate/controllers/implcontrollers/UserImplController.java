@@ -26,7 +26,6 @@ public class UserImplController {
         this.eventService = eventService;
     }
 
-
     @GetMapping
     public List<User> findAll() {
         log.info("Получен GET-запрос /users");
@@ -43,7 +42,6 @@ public class UserImplController {
         return foundedUser;
     }
 
-
     @PostMapping
     public Optional<User> save(@RequestBody @Valid User user) {
         log.info("Получен POST-запрос /users с телом: {}", user);
@@ -51,7 +49,6 @@ public class UserImplController {
         log.info("Отправлен ответ на POST-запрос /users с телом: {}", createdUser);
         return createdUser;
     }
-
 
     @PutMapping
     public Optional<User> update(@RequestBody @Valid User user) {
