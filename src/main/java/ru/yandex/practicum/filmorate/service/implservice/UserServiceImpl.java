@@ -13,7 +13,6 @@ import ru.yandex.practicum.filmorate.storage.dao.FriendshipDao;
 import ru.yandex.practicum.filmorate.storage.dao.RecommendationDao;
 import ru.yandex.practicum.filmorate.storage.dao.UserDao;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
